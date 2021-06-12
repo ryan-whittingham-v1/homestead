@@ -3,38 +3,59 @@
         {
         "name" : "pizza & smoothie",
         "ingredients" : [ "freschetta pizza", "orange juice", "vanilla yogurt", "bananas", "frozen strawberries", "frozen blueberries" ],
-        "scheduledDates" : [ "2021-06-14" ]
+        "scheduledDates" : [ "2021-06-15" ]
         }, 
         {
         "name" : "taco salad",
         "ingredients" : [ "veggie grounds", "taco seasoning", "romaine lettuce", "black beans", "salsa", "cheese", "black olives", "tortilla chips", "onion" ],
-        "scheduledDates" : [ "2021-06-15" ]
+        "scheduledDates" : [ "2021-06-14" ]
         }, 
         {
         "name" : "spaghetti",
         "ingredients" : [ "thin spaghetti noodles", "veggie sausage", "spaghetti sauce", "mushrooms", "diced tomatoes", "black olives", "onion", "minced garlic", "olive oil" ],
-        "scheduledDates" : [ "2021-06-01" ]
+        "scheduledDates" : [ "2021-06-13" ]
         }, 
         {
         "name" : "stir-fry",
-        "ingredients" : [ "quinoa", "sesame oil", "onion", "ginger", "mushrooms", "green pepper", "red pepper", "onion", "fresh brocolli", "cabbage", "amino acids", "orange juice", "corn starch", "brown sugar" ],
-        "scheduledDates" : [ "2021-06-12" ]
+        "ingredients" : [ "quinoa", "sesame oil", "onion", "ginger", "mushrooms", "green pepper", "red pepper", "onion", "fresh broccoli", "cabbage", "amino acids", "orange juice", "corn starch", "brown sugar" ],
+        "scheduledDates" : [ ]
         },
         {
         "name" : "papa murphs",
         "ingredients" : [ "pizza" ],
-        "scheduledDates" : [ ]
+        "scheduledDates" : [ "2021-06-19" ]
         },
         {
         "name" : "salmon & sweet potatoes",
-        "ingredients" : [ "salmon", "butter", "garlic", "frozen brocolli", "sweet potatoes", "brown sugar", "feta cheese", "clamata olives", "tater tots" ],
+        "ingredients" : [ "salmon", "butter", "garlic", "frozen broccoli", "sweet potatoes", "brown sugar", "feta cheese", "clamata olives", "tater tots" ],
         "scheduledDates" : [ ]
         },
         {
         "name" : "fajitas",
         "ingredients" : [ "peppers", "onion", "fajita seasoning", "chicken cubes", "tortillas", "salsa", "avocado", "black olives", "mushrooms", "black beans", "frozen corn", "tortilla chips" ],
         "scheduledDates" : [ ]
-        } 
+        },
+        {
+          "name" : "Stuffed Peppers",
+          "ingredients" : [ "peppers", "onion", "veggie grounds", "black beans", "pepperjack cheese" ],
+          "scheduledDates" : [ "2021-06-15" ]
+        },
+        {
+          "name" : "Crockpot Chili",
+          "ingredients" : [ "veggie grounds", "black beans", "quinoa", "chili powder", "rotel" ],
+          "scheduledDates" : [ "2021-06-16" ]
+        },
+        {
+          "name" : "BBQ",
+          "ingredients" : [ "beyond burgers", "baked beans", "veggie dogs", "onion", "pineapple", "mushrooms", "hamburger buns", "hotdog buns", "fresh corn", "tater tots" ],
+          "scheduledDates" : [ "2021-06-18" ]
+        },
+        {
+          "name" : "Chicken & Potatoes",
+          "ingredients" : [ "chicken & cheese cutlets", "potatoes", "frozen broccoli"  ],
+          "scheduledDates" : [ "2021-06-17" ]
+        }
+
     ],
 
     "familyMembers" : [ {
