@@ -4,10 +4,12 @@ import Home from './Home';
 import Login from './Login';
 import { AuthProvider } from './Auth';
 import PrivateRoute from './PrivateRoute';
+import Header from './Header';
 
 const App = () => {
   return (
     <AuthProvider>
+      <Header />
       <Router>
         <div>
           <PrivateRoute exact path="/" component={Home} />

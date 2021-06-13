@@ -25,12 +25,12 @@ class Dinners extends React.Component {
 
   getAllDinners() {
     const { dinners } = this.state;
-    if (dinners) {
+    if (Object.keys(dinners).length > 0) {
       return Object.keys(dinners).map((key) => {
         return <li>{dinners[key].name.toUpperCase()}</li>;
       });
     } else {
-      return <></>;
+      return <p>loading...</p>;
     }
   }
 
@@ -56,7 +56,7 @@ class Dinners extends React.Component {
         // if dinner has scheduled dates
         if (dinner.scheduledDates) {
           // convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T00:00:00');
+          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T23:59:59');
           // if scheduled date is future date
           if (scheduledDate > today) {
             // add to dinners array
@@ -76,7 +76,7 @@ class Dinners extends React.Component {
         // return html for each dinner
         return dinnersArray.map((dinner) => {
           //  convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T00:00:00');
+          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T23:59:59');
           // convert scheduled date to day of week
           let dayOfWeek;
           switch (scheduledDate.getDay()) {
@@ -162,7 +162,7 @@ class Dinners extends React.Component {
         console.log('No dinners scheduled');
       }
     } else {
-      console.log('No dinners available');
+      return <p>loading...</p>;
     }
   }
 
