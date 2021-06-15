@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from '../firebase.js';
+import DinnersForm from '../Components/DinnersForm';
 
 class Dinners extends React.Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class Dinners extends React.Component {
     const { dinners } = this.state;
     if (Object.keys(dinners).length > 0) {
       return Object.keys(dinners).map((key) => {
-        return <li>{dinners[key].name.toUpperCase()}</li>;
+        return <li key={key}>{dinners[key].name.toUpperCase()}</li>;
       });
     } else {
       return <p>loading...</p>;
@@ -37,7 +38,7 @@ class Dinners extends React.Component {
   getIngredients(dinner) {
     if (dinner) {
       return Object.keys(dinner.ingredients).map((key) => {
-        return <li>{dinner.ingredients[key]}</li>;
+        return <li key={key}>{dinner.ingredients[key]}</li>;
       });
     }
   }
@@ -148,14 +149,14 @@ class Dinners extends React.Component {
           }
           // return date, dinner name, and list of it's ingredients
           return (
-            <>
+            <div key={dinner.name}>
               <h4>
                 {dayOfWeek}, {month} {scheduledDate.getDate()}
               </h4>
               <h3>{dinner.name.toUpperCase()}</h3>
               <p>Ingredients:</p>
               <ul>{this.getIngredients(dinner)}</ul>
-            </>
+            </div>
           );
         });
       } else {
@@ -169,8 +170,8 @@ class Dinners extends React.Component {
   render() {
     return (
       <>
-        <h3>Available Dinners</h3>
-        <ul>{this.getAllDinners()}</ul>
+        <h2>Dinner Selection</h2>
+        <DinnersForm dinners={this.state.dinners} />
         <h2>Upcoming Dinners</h2>
         {this.getFutureDinners()}
       </>
