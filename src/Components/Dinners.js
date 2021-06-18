@@ -9,14 +9,15 @@ class Dinners extends React.Component {
     this.state = {
       database: {},
       dinners: [],
+      thisWeek: [],
     };
   }
 
   componentDidMount() {
-    this.getUserData();
+    this.getData();
   }
 
-  getUserData = () => {
+  getData = () => {
     let ref = firebase.database().ref();
     ref.on('value', (snapshot) => {
       const database = snapshot.val();
@@ -56,12 +57,14 @@ class Dinners extends React.Component {
       dinners.forEach((dinner) => {
         // if dinner has scheduled dates
         if (dinner.scheduledDates) {
-          // convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T23:59:59');
+          console.log('dinnerDate: ' + new Date(dinner.scheduledDates[0]));
+          console.log('todayDate: ' + today);
+          let scheduledDate = new Date(dinner.scheduledDates[0]);
           // if scheduled date is future date
           if (scheduledDate > today) {
             // add to dinners array
             dinnersArray.push(dinner);
+            console.log('dinnersArray: ' + dinnersArray);
           }
         }
       });
@@ -77,7 +80,7 @@ class Dinners extends React.Component {
         // return html for each dinner
         return dinnersArray.map((dinner) => {
           //  convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0] + 'T23:59:59');
+          let scheduledDate = new Date(dinner.scheduledDates[0]);
           // convert scheduled date to day of week
           let dayOfWeek;
           switch (scheduledDate.getDay()) {

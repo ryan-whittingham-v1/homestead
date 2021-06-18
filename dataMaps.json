@@ -2,58 +2,69 @@
     "dinners" : [ 
         {
         "name" : "pizza & smoothie",
+        "index" : 0,
         "ingredients" : [ "freschetta pizza", "orange juice", "vanilla yogurt", "bananas", "frozen strawberries", "frozen blueberries" ],
-        "scheduledDates" : [ "2021-06-15" ]
+        "scheduledDates" : [null ]
         }, 
         {
         "name" : "taco salad",
+        "index" : 1,
         "ingredients" : [ "veggie grounds", "taco seasoning", "romaine lettuce", "black beans", "salsa", "cheese", "black olives", "tortilla chips", "onion" ],
-        "scheduledDates" : [ "2021-06-14" ]
+        "scheduledDates" : [ null]
         }, 
         {
         "name" : "spaghetti",
+        "index" : 2,
         "ingredients" : [ "thin spaghetti noodles", "veggie sausage", "spaghetti sauce", "mushrooms", "diced tomatoes", "black olives", "onion", "minced garlic", "olive oil" ],
-        "scheduledDates" : [ "2021-06-13" ]
+        "scheduledDates" : [ null ]
         }, 
         {
         "name" : "stir-fry",
+        "index" : 3,
         "ingredients" : [ "quinoa", "sesame oil", "onion", "ginger", "mushrooms", "green pepper", "red pepper", "onion", "fresh broccoli", "cabbage", "amino acids", "orange juice", "corn starch", "brown sugar" ],
-        "scheduledDates" : [ ]
+        "scheduledDates" : [null ]
         },
         {
         "name" : "papa murphs",
+        "index" : 4,
         "ingredients" : [ "pizza" ],
-        "scheduledDates" : [ "2021-06-19" ]
+        "scheduledDates" : [null ]
         },
         {
         "name" : "salmon & sweet potatoes",
+        "index" : 5,
         "ingredients" : [ "salmon", "butter", "garlic", "frozen broccoli", "sweet potatoes", "brown sugar", "feta cheese", "clamata olives", "tater tots" ],
-        "scheduledDates" : [ ]
+        "scheduledDates" : [ null]
         },
         {
         "name" : "fajitas",
+        "index" : 6,
         "ingredients" : [ "peppers", "onion", "fajita seasoning", "chicken cubes", "tortillas", "salsa", "avocado", "black olives", "mushrooms", "black beans", "frozen corn", "tortilla chips" ],
-        "scheduledDates" : [ ]
+        "scheduledDates" : [ null ]
         },
         {
           "name" : "Stuffed Peppers",
+          "index" : 7,
           "ingredients" : [ "peppers", "onion", "veggie grounds", "black beans", "pepperjack cheese" ],
-          "scheduledDates" : [ "2021-06-15" ]
+          "scheduledDates" : [null ]
         },
         {
           "name" : "Crockpot Chili",
+          "index" : 8,
           "ingredients" : [ "veggie grounds", "black beans", "quinoa", "chili powder", "rotel" ],
-          "scheduledDates" : [ "2021-06-16" ]
+          "scheduledDates" : [ null ]
         },
         {
           "name" : "BBQ",
+          "index" : 9,
           "ingredients" : [ "beyond burgers", "baked beans", "veggie dogs", "onion", "pineapple", "mushrooms", "hamburger buns", "hotdog buns", "fresh corn", "tater tots" ],
-          "scheduledDates" : [ "2021-06-18" ]
+          "scheduledDates" : [ null ]
         },
         {
           "name" : "Chicken & Potatoes",
+          "index" : 10,
           "ingredients" : [ "chicken & cheese cutlets", "potatoes", "frozen broccoli"  ],
-          "scheduledDates" : [ "2021-06-17" ]
+          "scheduledDates" : [ null ]
         }
 
     ],
@@ -64,6 +75,40 @@
     }, {
       "birthday" : "09-21-1982",
       "name" : "Mom"
-    } ]
+    } ],
+
+    "week" : [ {
+      "day" : "Sunday",
+      "dinner" : "taco salad"
+      },
+      {
+        "day" : "Monday",
+        "dinner" : "taco salad"
+      },
+      {
+        "day" : "Tuesday",
+        "dinner" : "taco salad"
+      },
+      {
+        "day" : "Wednesday",
+        "dinner" : "taco salad"
+      },
+      {
+        "day" : "Thursday",
+        "dinner" : "taco salad"
+      },
+      {
+        "day" : "Friday",
+        "dinner" : "taco salad"
+      },
+      {
+        "day" : "Saturday",
+        "dinner" : "taco salad"
+      }
+    ]
   }
+
+
+
+
   
