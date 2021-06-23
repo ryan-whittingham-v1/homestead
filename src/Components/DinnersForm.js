@@ -6,85 +6,32 @@ class DinnersForm extends React.Component {
     super(props);
 
     this.state = {
-      thisWeeksDates: [],
       selectedDate: null, // index of week array i.e. 0 = Sunday ... 6 = Saturday
-      thisWeeksDinners: [null, null, null, null, null, null, null],
+      //thisWeeksDinners: [null, null, null, null, null, null, null],
     };
   }
 
-  componentDidMount() {
-    this.getWeek();
-  }
-
-  getWeek = () => {
-    // create empty week array
-    let week = [null, null, null, null, null, null, null];
-    // get today's date
-    let today = new Date();
-    // determine day of the week
-    let dayOfWeek = today.getDay();
-    // place today in week array at dayOfWeek index
-    week[dayOfWeek] = today;
-    // update week array with days before today
-    for (let index = dayOfWeek - 1; index >= 0; index--) {
-      let yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      week[index] = yesterday;
-      today = yesterday;
-    }
-    // reset today variable
-    today = new Date();
-    // update week array with days after today
-    for (let index = dayOfWeek + 1; index <= 6; index++) {
-      let tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      week[index] = tomorrow;
-      today = tomorrow;
-    }
-    // save array of this week's dates to state
-    this.setState(
-      {
-        thisWeeksDates: week,
-      },
-      () => {
-        console.log(this.state.thisWeeksDates);
-      }
-    );
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    // update dinner object to add day to it's scheduled dates array
-    //console.log(e.target.value.name);
-    /*  firebase
-      .database()
-      .ref('/dinners')
-      .set({
-        username: name,
-        email: email,
-        profile_picture: imageUrl,
-      }); */
-  };
+  componentDidMount() {}
 
   handleChange = (e) => {
     // if dinner was selected
     if (e.target.value !== '---') {
       console.log(e.target.value);
       // create copy of thisWeeksDinners array from state
-      let dinnersArray = [...this.state.thisWeeksDinners];
+      // let dinnersArray = [...this.state.thisWeeksDinners];
       // convert selected dinner to dinner object
       let dinner = JSON.parse(e.target.value);
       // store dinner object in dinnersArray at index of selected date
-      dinnersArray[this.state.selectedDate] = dinner;
+      // dinnersArray[this.state.selectedDate] = dinner;
       // update thisWeeksDinners array in state
-      this.setState(
-        {
-          thisWeeksDinners: dinnersArray,
-        },
-        () => {
-          console.log(this.state.thisWeeksDinners);
-        }
-      );
+      //this.setState(
+      //{
+      //thisWeeksDinners: dinnersArray,
+      //},
+      //() => {
+      //console.log(this.state.thisWeeksDinners);
+      //}
+      //);
 
       // create copy of selected dinners scheduled dates
       let newScheduledDates = [];
@@ -95,7 +42,7 @@ class DinnersForm extends React.Component {
       }
       // add selected day's date to newScheduledDates array
       newScheduledDates.unshift(
-        this.state.thisWeeksDates[this.state.selectedDate]
+        this.props.thisWeeksDates[this.state.selectedDate]
       );
       // update scheduledDates array in dinner object
       dinner.scheduledDates = newScheduledDates;
@@ -114,6 +61,8 @@ class DinnersForm extends React.Component {
 
   getDinnerOptions(dinners) {
     if (Object.keys(dinners).length > 0) {
+      //sort dinners
+      dinners.sort();
       return Object.keys(dinners).map((key) => {
         return (
           <option key={key} value={JSON.stringify(dinners[key])}>
@@ -130,11 +79,28 @@ class DinnersForm extends React.Component {
     }
   }
 
+  // Dinner Sorting Function
+  compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+
+    let comparison = 0;
+    if (nameA > nameB) {
+      comparison = 1;
+    } else if (nameA < nameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
   render() {
+    let sortedDinners = [...this.props.dinners];
+    sortedDinners.sort(this.compare);
     let selection = (
       <select defaultValue="---" onChange={this.handleChange}>
         <option value="---">---</option>
-        {this.getDinnerOptions(this.props.dinners)}
+        {this.getDinnerOptions(sortedDinners)}
       </select>
     );
 

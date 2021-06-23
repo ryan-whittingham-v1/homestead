@@ -43,13 +43,13 @@
         "scheduledDates" : [ null ]
         },
         {
-          "name" : "Stuffed Peppers",
+          "name" : "stuffed peppers",
           "index" : 7,
           "ingredients" : [ "peppers", "onion", "veggie grounds", "black beans", "pepperjack cheese" ],
           "scheduledDates" : [null ]
         },
         {
-          "name" : "Crockpot Chili",
+          "name" : "crockpot chili",
           "index" : 8,
           "ingredients" : [ "veggie grounds", "black beans", "quinoa", "chili powder", "rotel" ],
           "scheduledDates" : [ null ]
@@ -61,9 +61,117 @@
           "scheduledDates" : [ null ]
         },
         {
-          "name" : "Chicken & Potatoes",
+          "name" : "chicken & potatoes",
           "index" : 10,
           "ingredients" : [ "chicken & cheese cutlets", "potatoes", "frozen broccoli"  ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "crockpot enchiladas",
+          "index" : 11,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "broccoli & cheese casserole",
+          "index" : 12,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "irish stew",
+          "index" : 13,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "raviolis",
+          "index" : 14,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "lasagna",
+          "index" : 15,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "tortilla soup",
+          "index" : 16,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "chili",
+          "index" : 17,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "sweet potato stew",
+          "index" : 18,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "enchiladas",
+          "index" : 19,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "chili dogs",
+          "index" : 20,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "fish tacos",
+          "index" : 21,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "grilled cheese & tomato soup",
+          "index" : 22,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "pasta salad",
+          "index" : 23,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "chicken and rice",
+          "index" : 24,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "tacos",
+          "index" : 25,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "mexican pizza",
+          "index" : 26,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "chicken burgers",
+          "index" : 27,
+          "ingredients" : [ "--" ],
+          "scheduledDates" : [ null ]
+        },
+        {
+          "name" : "chicken caesar salad",
+          "index" : 28,
+          "ingredients" : [ "--" ],
           "scheduledDates" : [ null ]
         }
 
@@ -75,37 +183,9 @@
     }, {
       "birthday" : "09-21-1982",
       "name" : "Mom"
-    } ],
+    } ]
 
-    "week" : [ {
-      "day" : "Sunday",
-      "dinner" : "taco salad"
-      },
-      {
-        "day" : "Monday",
-        "dinner" : "taco salad"
-      },
-      {
-        "day" : "Tuesday",
-        "dinner" : "taco salad"
-      },
-      {
-        "day" : "Wednesday",
-        "dinner" : "taco salad"
-      },
-      {
-        "day" : "Thursday",
-        "dinner" : "taco salad"
-      },
-      {
-        "day" : "Friday",
-        "dinner" : "taco salad"
-      },
-      {
-        "day" : "Saturday",
-        "dinner" : "taco salad"
-      }
-    ]
+   
   }
 
 
