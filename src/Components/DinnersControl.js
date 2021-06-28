@@ -108,14 +108,11 @@ class DinnersControl extends React.Component {
       dinners.forEach((dinner) => {
         // if dinner has scheduled dates
         if (dinner.scheduledDates) {
-          console.log('dinnerDate: ' + new Date(dinner.scheduledDates[0]));
-          console.log('todayDate: ' + today);
           let scheduledDate = new Date(dinner.scheduledDates[0]);
           // if scheduled date is future date
           if (scheduledDate > today) {
             // add to dinners array
             dinnersArray.push(dinner);
-            console.log('dinnersArray: ' + dinnersArray);
           }
         }
       });
@@ -228,14 +225,10 @@ class DinnersControl extends React.Component {
     let dinnersArray = [];
     // if dinners available
     if (dinners.length > 0) {
-      // get today's date
-      let today = new Date();
       // traverse dinner data
       dinners.forEach((dinner) => {
         // if dinner has scheduled dates
         if (dinner.scheduledDates) {
-          console.log('dinnerDate: ' + new Date(dinner.scheduledDates[0]));
-          console.log('todayDate: ' + today);
           let scheduledDate = new Date(dinner.scheduledDates[0]);
           // if scheduled date is within choosen week
           if (
@@ -244,7 +237,6 @@ class DinnersControl extends React.Component {
           ) {
             // add to dinners array
             dinnersArray.push(dinner);
-            console.log('dinnersArray: ' + dinnersArray);
           }
         }
       });
@@ -353,43 +345,50 @@ class DinnersControl extends React.Component {
   handleNextWeek = () => {
     // create empty array for next week dates
     let nextWeek = [];
+    let dates = this.state.thisWeeksDates;
     // create new week of dates based off of last day of current week
-    if (this.state.thisWeeksDates[6] != null) {
-      for (let index = 0; index <= 6; index++) {
-        let nextDay = new Date();
+
+    if (dates) {
+      let prevSunday = new Date(this.state.thisWeeksDates[6]);
+
+      for (let i = 1; i <= 7; i++) {
+        let nextDay = new Date(prevSunday);
+        nextDay.setDate(nextDay.getDate() + i);
         nextDay.setHours(23, 59, 59, 999);
-        nextDay.setDate(this.state.thisWeeksDates[6].getDate() + index + 1);
-        nextWeek[index] = nextDay;
+        nextWeek.push(nextDay);
       }
+      // save array of next week's dates to state
+      this.setState(
+        {
+          thisWeeksDates: nextWeek,
+        },
+        () => {}
+      );
     }
-    // save array of next week's dates to state
-    this.setState(
-      {
-        thisWeeksDates: nextWeek,
-      },
-      () => {}
-    );
   };
 
   handlePrevWeek = () => {
+    let dates = this.state.thisWeeksDates;
     // create empty array for next week dates
     let prevWeek = [];
     // create new week of dates based off of last day of current week
-    if (this.state.thisWeeksDates[6] != null) {
-      for (let index = 0; index <= 6; index++) {
-        let nextDay = new Date();
-        nextDay.setHours(23, 59, 59, 999);
-        nextDay.setDate(this.state.thisWeeksDates[6].getDate() + index - 13);
-        prevWeek[index] = nextDay;
+    if (dates) {
+      let currentSunday = new Date(this.state.thisWeeksDates[0]);
+      for (let i = 1; i <= 7; i++) {
+        let nextPrevDay = new Date(currentSunday);
+        nextPrevDay.setDate(nextPrevDay.getDate() - i);
+        nextPrevDay.setHours(23, 59, 59, 999);
+        prevWeek.unshift(nextPrevDay);
       }
+
+      // save array of next week's dates to state
+      this.setState(
+        {
+          thisWeeksDates: prevWeek,
+        },
+        () => {}
+      );
     }
-    // save array of next week's dates to state
-    this.setState(
-      {
-        thisWeeksDates: prevWeek,
-      },
-      () => {}
-    );
   };
 
   render() {
@@ -403,7 +402,6 @@ class DinnersControl extends React.Component {
           thisWeeksDates={this.state.thisWeeksDates}
           dinners={this.state.dinners}
         />
-        {this.getWeeksDinners()}
       </>
     );
   }

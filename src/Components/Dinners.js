@@ -1,6 +1,7 @@
 import React from 'react';
 import firebase from '../firebase.js';
 import DinnersForm from '../Components/DinnersForm';
+import moment from 'moment';
 
 class Dinners extends React.Component {
   constructor(props) {
@@ -52,14 +53,17 @@ class Dinners extends React.Component {
     // if dinners available
     if (dinners.length > 0) {
       // get today's date
-      let today = new Date();
+      //let today = new Date();
+      let today = moment();
+      console.log("today: " + today)
       // traverse dinner data
       dinners.forEach((dinner) => {
         // if dinner has scheduled dates
         if (dinner.scheduledDates) {
-          console.log('dinnerDate: ' + new Date(dinner.scheduledDates[0]));
-          console.log('todayDate: ' + today);
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
+          //console.log('dinnerDate: ' + new Date(dinner.scheduledDates[0]));
+          //console.log('todayDate: ' + today);
+          let scheduledDate = moment(dinner.scheduledDates[0]);
+          console.log(scheduledDate)
           // if scheduled date is future date
           if (scheduledDate > today) {
             // add to dinners array
@@ -73,17 +77,17 @@ class Dinners extends React.Component {
         // sort dinners array by date in ascending order
         dinnersArray.sort(function (dinnerA, dinnerB) {
           return (
-            new Date(dinnerA.scheduledDates[0]) -
-            new Date(dinnerB.scheduledDates[0])
+            moment(dinnerA.scheduledDates[0]) -
+            moment(dinnerB.scheduledDates[0])
           );
         });
         // return html for each dinner
         return dinnersArray.map((dinner) => {
           //  convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
+          let scheduledDate = moment(dinner.scheduledDates[0]);
           // convert scheduled date to day of week
-          let dayOfWeek;
-          switch (scheduledDate.getDay()) {
+          let dayOfWeek = schedluedDate.format(dddd);
+          /* switch (scheduledDate.getDay()) {
             case 0:
               dayOfWeek = 'Sunday';
               break;
@@ -107,10 +111,10 @@ class Dinners extends React.Component {
               break;
             default:
               console.log('date error');
-          }
+          } */
           // get month from scheduled date
-          let month;
-          switch (scheduledDate.getMonth()) {
+          let month = scheduledDate.format(MMM Do);
+          /* switch (scheduledDate.getMonth()) {
             case 0:
               month = 'January';
               break;
@@ -149,12 +153,12 @@ class Dinners extends React.Component {
               break;
             default:
               console.log('date error');
-          }
+          } */
           // return date, dinner name, and list of it's ingredients
           return (
             <div key={dinner.name}>
               <h4>
-                {dayOfWeek}, {month} {scheduledDate.getDate()}
+                {dayOfWeek}, {month}}
               </h4>
               <h3>{dinner.name.toUpperCase()}</h3>
               <p>Ingredients:</p>
