@@ -6,7 +6,8 @@ class DinnersForm extends React.Component {
     super(props);
 
     this.state = {
-      selectedDate: null, // index of week array i.e. 0 = Sunday ... 6 = Saturday
+      selectedDayIndex: null, // index for day of week i.e. 0 = Sunday ... 6 = Saturday
+      dinners: [], // array of selected dinner objects
     };
   }
 
@@ -17,28 +18,15 @@ class DinnersForm extends React.Component {
     if (e.target.value !== '---') {
       // convert selected dinner to dinner object
       let dinner = JSON.parse(e.target.value);
-      // create copy of selected dinners scheduled dates
-      let newScheduledDates = [];
-      // if dinner has a scheduledDates array
-      if (dinner.scheduledDates) {
-        // copy existing scheduledDates info to newScheduledDates array
-        newScheduledDates = [...dinner.scheduledDates];
-      }
-      // add selected day's date to newScheduledDates array
-      newScheduledDates.unshift(
-        this.props.thisWeeksDates[this.state.selectedDate]
+      // update dinners array in state
+      let scheduledDinners = [...this.state.dinners];
+      scheduledDinners[this.state.selectedDayIndex] = dinner;
+      this.setState(
+        {
+          dinners: scheduledDinners,
+        },
+        () => {}
       );
-      // update scheduledDates array in dinner object
-      dinner.scheduledDates = newScheduledDates;
-      // update dinner in firebase
-      firebase
-        .database()
-        .ref('/dinners/' + dinner.index)
-        .update({
-          scheduledDates: dinner.scheduledDates,
-        });
-    } else {
-      console.log('no dinner selected');
     }
   };
 
@@ -80,9 +68,14 @@ class DinnersForm extends React.Component {
     return comparison;
   }
 
-  dinnerSelection(dinners, week, day) {
-    //initialize a defaultValue variable
-    let defaultValue = '---';
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.preselectedDinners !== prevProps.preselectedDinners) {
+      this.forceUpdate();
+    }
+  }
+
+  dinnerSelection(dinners, index) {
     //initialize dinnerOptions array
     let dinnerOptions = [];
     // if dinners array is not empty create option for each dinner
@@ -92,22 +85,6 @@ class DinnersForm extends React.Component {
       sortedDinners.sort(this.compare);
       // create html option for each dinner
       dinnerOptions = sortedDinners.map((dinner) => {
-        // check if dinner is already scheduled for the day
-        if (dinner.scheduledDates) {
-          dinner.scheduledDates.forEach((date) => {
-            // if date is within the selected week
-            if (
-              new Date(date) >= new Date(week[0]) &&
-              new Date(date) <= new Date(week[6])
-            ) {
-              // check if day of week of the date matches the selection day
-
-              if (new Date(date).getDay() === day) {
-                defaultValue = JSON.stringify(dinner);
-              }
-            }
-          });
-        }
         return (
           <option key={dinner.index} value={JSON.stringify(dinner)}>
             {dinner.name.toUpperCase()}
@@ -121,90 +98,97 @@ class DinnersForm extends React.Component {
         </option>
       );
     }
-    //create the selection element
-    let selection = (
+    //create the select element
+    let defaultValue = 'dog';
+    console.log('preDiner ' + JSON.stringify(this.props.preselectedDinners));
+    if (this.props.preselectedDinners !== undefined) {
+      defaultValue = this.props.preselectedDinners[index].name;
+    }
+    let select = (
       <select value={defaultValue} onChange={this.handleChange}>
         <option>---</option>
         {dinnerOptions}
       </select>
     );
-    return selection;
+    return select;
   }
+
+  updateFirebase = () => {
+    firebase
+      .database()
+      .ref()
+      .child('weeks')
+      .update({
+        [JSON.stringify(this.props.thisWeeksDates[0]).substring(1, 11)]: {
+          dinners: [...this.state.dinners],
+          dates: JSON.parse(JSON.stringify(this.props.thisWeeksDates)),
+        },
+      });
+  };
 
   render() {
     return (
-      <form>
-        <label onClick={() => this.setState({ selectedDate: 0 }, () => {})}>
-          Sunday
+      <>
+        <form>
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 0 }, () => {})}
+          >
+            Sunday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 0)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            0
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 1 }, () => {})}>
-          Monday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 1 }, () => {})}
+          >
+            Monday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 1)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            1
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 2 }, () => {})}>
-          Tuesday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 2 }, () => {})}
+          >
+            Tuesday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 2)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            2
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 3 }, () => {})}>
-          Wednesday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 3 }, () => {})}
+          >
+            Wednesday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 3)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            3
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 4 }, () => {})}>
-          Thursday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 4 }, () => {})}
+          >
+            Thursday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 4)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            4
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 5 }, () => {})}>
-          Friday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 5 }, () => {})}
+          >
+            Friday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 5)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            5
-          )}
-        </label>
-        <br />
-        <label onClick={() => this.setState({ selectedDate: 6 }, () => {})}>
-          Saturday
+          <label
+            onClick={() => this.setState({ selectedDayIndex: 6 }, () => {})}
+          >
+            Saturday
+            <br />
+            {this.dinnerSelection(this.props.dinners, 6)}
+          </label>
           <br />
-          {this.dinnerSelection(
-            this.props.dinners,
-            this.props.thisWeeksDates,
-            6
-          )}
-        </label>
-        <br />
-      </form>
+        </form>
+        <button onClick={this.updateFirebase}>Save</button>
+      </>
     );
   }
 }

@@ -1,366 +1,175 @@
 import firebase from '../firebase.js';
 import React from 'react';
-import DinnersForm from '../Components/DinnersForm';
+import DinnerFormTwo from '../Components/DinnerFormTwo';
 
 class DinnersControl extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      thisWeeksDates: [null, null, null, null, null, null, null],
-      thisWeeksDinners: [null, null, null, null, null, null, null],
-      database: {},
       dinners: [],
+      weeks: [],
+      weeksDates: [],
+      weeksDinners: [],
+      isLoaded: false,
     };
+
+    this.getCurrentWeek = this.getCurrentWeek.bind(this);
+    this.handleNextWeek = this.handleNextWeek.bind(this);
+    this.handlePrevWeek = this.handlePrevWeek.bind(this);
+    this.getFirebaseData = this.getFirebaseData.bind(this);
+    this.updateDinnerState = this.updateDinnerState.bind(this);
   }
 
   componentDidMount() {
-    this.getData();
-    this.getWeek();
+    this.getCurrentWeek();
   }
 
-  getData = () => {
+  componentDidUpdate(prevProps, prevState) {
+    // if week changed
+    if (this.state.weeksDates !== prevState.weeksDates) {
+      console.log('week changed');
+
+      let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
+      console.log(weeks);
+      let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
+      console.log(sunday);
+
+      for (let i = 0; i < weeks.length; i++) {
+        if (sunday === weeks[i]) {
+          console.log('Found week');
+          this.setState({
+            weeksDinners: [...this.state.weeks[weeks[i]].dinners],
+          });
+          return;
+        }
+      }
+      console.log('No week');
+      this.setState(
+        {
+          weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
+        },
+
+        () => {}
+      );
+    }
+  }
+
+  updateDinnerState = () => {
+    let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
+    console.log(weeks);
+    let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
+    console.log(sunday);
+
+    for (let i = 0; i < weeks.length; i++) {
+      if (sunday === weeks[i]) {
+        console.log('Found week');
+        this.setState({
+          weeksDinners: [...this.state.weeks[weeks[i]].dinners],
+        });
+        return;
+      }
+    }
+    console.log('No week');
+    this.setState(
+      {
+        weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
+      },
+
+      () => {}
+    );
+  };
+
+  getFirebaseData = async () => {
     let ref = firebase.database().ref();
     ref.on('value', (snapshot) => {
       const database = snapshot.val();
       this.setState(database);
+      this.updateDinnerState();
     });
+    return 1;
   };
 
-  getWeek = () => {
-    // create empty week array
-    let week = [null, null, null, null, null, null, null];
+  getCurrentWeek = async () => {
+    console.log('getCurrentWeek');
+    await this.getFirebaseData();
     // get today's date
     let today = new Date();
+    // set today's time to end of day
     today.setHours(23, 59, 59, 999);
-    // determine day of the week
+    // create new dates array
+    let dates = [];
+    // determine day of the week from today
     let dayOfWeek = today.getDay();
-    // place today in week array at dayOfWeek index
-    week[dayOfWeek] = today;
-    // update week array with days before today
+    // place today at appropriate index using dayOfWeek
+    dates[dayOfWeek] = today;
+    // update date array with days before today
     for (let index = dayOfWeek - 1; index >= 0; index--) {
       let yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      week[index] = yesterday;
+      dates[index] = yesterday;
       today = yesterday;
     }
     // reset today variable
     today = new Date();
     today.setHours(23, 59, 59, 999);
-    // update week array with days after today
+    // update date array with days after today
     for (let index = dayOfWeek + 1; index <= 6; index++) {
       let tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
-      week[index] = tomorrow;
+      dates[index] = tomorrow;
       today = tomorrow;
     }
-    // save array of this week's dates to state
+    // save dates array to state
     this.setState(
       {
-        thisWeeksDates: week,
+        weeksDates: dates,
       },
       () => {}
     );
   };
 
   weekTitle() {
-    if (
-      this.state.thisWeeksDates[0] != null &&
-      this.state.thisWeeksDates[6] != null
-    ) {
-      let startOfWeekMonth = this.state.thisWeeksDates[0].getMonth() + 1;
-      let endOfWeekMonth = this.state.thisWeeksDates[6].getMonth() + 1;
+    // if week info present
+    if (this.state.weeksDates) {
+      let firstDayOfWeek = new Date(this.state.weeksDates[0]);
+      let lastDayOfWeek = new Date(this.state.weeksDates[6]);
+      let startOfWeekMonth = firstDayOfWeek.getMonth() + 1;
+      let endOfWeekMonth = lastDayOfWeek.getMonth() + 1;
       return (
         <h3>
           {'Week: ' +
             startOfWeekMonth +
             '/' +
-            this.state.thisWeeksDates[0].getDate() +
+            firstDayOfWeek.getDate() +
             ' to ' +
             endOfWeekMonth +
             '/' +
-            this.state.thisWeeksDates[6].getDate()}
+            lastDayOfWeek.getDate()}
         </h3>
       );
     } else {
-      return <p>error</p>;
-    }
-  }
-
-  getIngredients(dinner) {
-    if (dinner) {
-      return Object.keys(dinner.ingredients).map((key) => {
-        return <li key={key}>{dinner.ingredients[key]}</li>;
-      });
-    }
-  }
-
-  getFutureDinners() {
-    // get dinners data from state
-    const { dinners } = this.state;
-    // create dinners array to store future dinners
-    let dinnersArray = [];
-    // if dinners available
-    if (dinners.length > 0) {
-      // get today's date
-      let today = new Date();
-      // traverse dinner data
-      dinners.forEach((dinner) => {
-        // if dinner has scheduled dates
-        if (dinner.scheduledDates) {
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
-          // if scheduled date is future date
-          if (scheduledDate > today) {
-            // add to dinners array
-            dinnersArray.push(dinner);
-          }
-        }
-      });
-      // if dinner array has dinners
-      if (dinnersArray.length > 0) {
-        // sort dinners array by date in ascending order
-        dinnersArray.sort(function (dinnerA, dinnerB) {
-          return (
-            new Date(dinnerA.scheduledDates[0]) -
-            new Date(dinnerB.scheduledDates[0])
-          );
-        });
-        // return html for each dinner
-        return dinnersArray.map((dinner) => {
-          //  convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
-          // convert scheduled date to day of week
-          let dayOfWeek;
-          switch (scheduledDate.getDay()) {
-            case 0:
-              dayOfWeek = 'Sunday';
-              break;
-            case 1:
-              dayOfWeek = 'Monday';
-              break;
-            case 2:
-              dayOfWeek = 'Tuesday';
-              break;
-            case 3:
-              dayOfWeek = 'Wednesday';
-              break;
-            case 4:
-              dayOfWeek = 'Thursday';
-              break;
-            case 5:
-              dayOfWeek = 'Friday';
-              break;
-            case 6:
-              dayOfWeek = 'Saturday';
-              break;
-            default:
-              console.log('date error');
-          }
-          // get month from scheduled date
-          let month;
-          switch (scheduledDate.getMonth()) {
-            case 0:
-              month = 'January';
-              break;
-            case 1:
-              month = 'February';
-              break;
-            case 2:
-              month = 'March';
-              break;
-            case 3:
-              month = 'April';
-              break;
-            case 4:
-              month = 'May';
-              break;
-            case 5:
-              month = 'June';
-              break;
-            case 6:
-              month = 'July';
-              break;
-            case 7:
-              month = 'August';
-              break;
-            case 8:
-              month = 'September';
-              break;
-            case 9:
-              month = 'October';
-              break;
-            case 10:
-              month = 'November';
-              break;
-            case 11:
-              month = 'December';
-              break;
-            default:
-              console.log('date error');
-          }
-          // return date, dinner name, and list of it's ingredients
-          return (
-            <div key={dinner.name}>
-              <h4>
-                {dayOfWeek}, {month} {scheduledDate.getDate()}
-              </h4>
-              <h3>{dinner.name.toUpperCase()}</h3>
-              <h5>Ingredients:</h5>
-              <ul>{this.getIngredients(dinner)}</ul>
-            </div>
-          );
-        });
-      } else {
-        return <p>No dinners scheduled</p>;
-      }
-    } else {
-      return <p>loading...</p>;
-    }
-  }
-
-  getWeeksDinners() {
-    // get dinners data from state
-    const { dinners } = this.state;
-    // create dinners array to store future dinners
-    let dinnersArray = [];
-    // if dinners available
-    if (dinners.length > 0) {
-      // traverse dinner data
-      dinners.forEach((dinner) => {
-        // if dinner has scheduled dates
-        if (dinner.scheduledDates) {
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
-          // if scheduled date is within choosen week
-          if (
-            scheduledDate >= this.state.thisWeeksDates[0] &&
-            scheduledDate <= this.state.thisWeeksDates[6]
-          ) {
-            // add to dinners array
-            dinnersArray.push(dinner);
-          }
-        }
-      });
-      // if dinner array has dinners
-      if (dinnersArray.length > 0) {
-        // sort dinners array by date in ascending order
-        dinnersArray.sort(function (dinnerA, dinnerB) {
-          return (
-            new Date(dinnerA.scheduledDates[0]) -
-            new Date(dinnerB.scheduledDates[0])
-          );
-        });
-        // return html for each dinner
-        return dinnersArray.map((dinner) => {
-          //  convert scheduled date from string to date object
-          let scheduledDate = new Date(dinner.scheduledDates[0]);
-          // convert scheduled date to day of week
-          let dayOfWeek;
-          switch (scheduledDate.getDay()) {
-            case 0:
-              dayOfWeek = 'Sunday';
-              break;
-            case 1:
-              dayOfWeek = 'Monday';
-              break;
-            case 2:
-              dayOfWeek = 'Tuesday';
-              break;
-            case 3:
-              dayOfWeek = 'Wednesday';
-              break;
-            case 4:
-              dayOfWeek = 'Thursday';
-              break;
-            case 5:
-              dayOfWeek = 'Friday';
-              break;
-            case 6:
-              dayOfWeek = 'Saturday';
-              break;
-            default:
-              console.log('date error');
-          }
-          // get month from scheduled date
-          let month;
-          switch (scheduledDate.getMonth()) {
-            case 0:
-              month = 'January';
-              break;
-            case 1:
-              month = 'February';
-              break;
-            case 2:
-              month = 'March';
-              break;
-            case 3:
-              month = 'April';
-              break;
-            case 4:
-              month = 'May';
-              break;
-            case 5:
-              month = 'June';
-              break;
-            case 6:
-              month = 'July';
-              break;
-            case 7:
-              month = 'August';
-              break;
-            case 8:
-              month = 'September';
-              break;
-            case 9:
-              month = 'October';
-              break;
-            case 10:
-              month = 'November';
-              break;
-            case 11:
-              month = 'December';
-              break;
-            default:
-              console.log('date error');
-          }
-          // return date, dinner name, and list of it's ingredients
-          return (
-            <div key={dinner.name}>
-              <h4>
-                {dayOfWeek}, {month} {scheduledDate.getDate()}
-              </h4>
-              <h3>{dinner.name.toUpperCase()}</h3>
-              <h5>Ingredients:</h5>
-              <ul>{this.getIngredients(dinner)}</ul>
-            </div>
-          );
-        });
-      } else {
-        return <p>No dinners scheduled</p>;
-      }
-    } else {
-      return <p>loading...</p>;
+      return <h3>loading...</h3>;
     }
   }
 
   handleNextWeek = () => {
     // create empty array for next week dates
     let nextWeek = [];
-    let dates = this.state.thisWeeksDates;
+    let dates = [...this.state.weeksDates];
     // create new week of dates based off of last day of current week
-
     if (dates) {
-      let prevSunday = new Date(this.state.thisWeeksDates[6]);
-
+      let prevSunday = new Date(dates[6]);
       for (let i = 1; i <= 7; i++) {
         let nextDay = new Date(prevSunday);
         nextDay.setDate(nextDay.getDate() + i);
         nextDay.setHours(23, 59, 59, 999);
         nextWeek.push(nextDay);
       }
-      // save array of next week's dates to state
+      // save dates array to state
       this.setState(
         {
-          thisWeeksDates: nextWeek,
+          weeksDates: nextWeek,
         },
         () => {}
       );
@@ -368,23 +177,22 @@ class DinnersControl extends React.Component {
   };
 
   handlePrevWeek = () => {
-    let dates = this.state.thisWeeksDates;
+    let dates = [...this.state.weeksDates];
     // create empty array for next week dates
     let prevWeek = [];
     // create new week of dates based off of last day of current week
     if (dates) {
-      let currentSunday = new Date(this.state.thisWeeksDates[0]);
+      let currentSunday = new Date(dates[0]);
       for (let i = 1; i <= 7; i++) {
         let nextPrevDay = new Date(currentSunday);
         nextPrevDay.setDate(nextPrevDay.getDate() - i);
         nextPrevDay.setHours(23, 59, 59, 999);
         prevWeek.unshift(nextPrevDay);
       }
-
-      // save array of next week's dates to state
+      // save array of previous week's dates to state
       this.setState(
         {
-          thisWeeksDates: prevWeek,
+          weeksDates: prevWeek,
         },
         () => {}
       );
@@ -398,9 +206,12 @@ class DinnersControl extends React.Component {
         {this.weekTitle()}
         <button onClick={this.handlePrevWeek}>Previous Week</button>
         <button onClick={this.handleNextWeek}>Next Week</button>
-        <DinnersForm
-          thisWeeksDates={this.state.thisWeeksDates}
+        <DinnerFormTwo
+          thisWeeksDates={this.state.weeksDates}
           dinners={this.state.dinners}
+          preselectedDinners={this.state.weeksDinners}
+          updateDinners={this.updateDinnerState}
+          getFirebase={this.getFirebaseData}
         />
       </>
     );
