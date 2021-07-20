@@ -26,25 +26,25 @@ class DinnersControl extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // if week changed
-    if (this.state.weeksDates !== prevState.weeksDates) {
-      console.log('week changed');
+    if (prevState.weeks !== this.state.weeks) {
+      this.updateDinnerState();
+    }
+  }
 
-      let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
-      console.log(weeks);
-      let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
-      console.log(sunday);
-
-      for (let i = 0; i < weeks.length; i++) {
-        if (sunday === weeks[i]) {
-          console.log('Found week');
-          this.setState({
-            weeksDinners: [...this.state.weeks[weeks[i]].dinners],
-          });
-          return;
-        }
+  updateDinnerState = () => {
+    let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
+    let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
+    let flag = false;
+    for (let i = 0; i < weeks.length; i++) {
+      if (sunday === weeks[i]) {
+        this.setState({
+          weeksDinners: [...this.state.weeks[weeks[i]].dinners],
+        });
+        flag = true;
+        return;
       }
-      console.log('No week');
+    }
+    if (!flag) {
       this.setState(
         {
           weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
@@ -53,45 +53,26 @@ class DinnersControl extends React.Component {
         () => {}
       );
     }
-  }
-
-  updateDinnerState = () => {
-    let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
-    console.log(weeks);
-    let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
-    console.log(sunday);
-
-    for (let i = 0; i < weeks.length; i++) {
-      if (sunday === weeks[i]) {
-        console.log('Found week');
-        this.setState({
-          weeksDinners: [...this.state.weeks[weeks[i]].dinners],
-        });
-        return;
-      }
-    }
-    console.log('No week');
-    this.setState(
-      {
-        weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
-      },
-
-      () => {}
-    );
   };
 
   getFirebaseData = async () => {
     let ref = firebase.database().ref();
     ref.on('value', (snapshot) => {
       const database = snapshot.val();
-      this.setState(database);
-      this.updateDinnerState();
+      this.setState(
+        {
+          dinners: database.dinners,
+          weeks: database.weeks,
+          isLoaded: true,
+        },
+        () => {
+          return 1;
+        }
+      );
     });
-    return 1;
   };
 
   getCurrentWeek = async () => {
-    console.log('getCurrentWeek');
     await this.getFirebaseData();
     // get today's date
     let today = new Date();
@@ -123,9 +104,11 @@ class DinnersControl extends React.Component {
     // save dates array to state
     this.setState(
       {
-        weeksDates: dates,
+        weeksDates: [...dates],
       },
-      () => {}
+      () => {
+        this.updateDinnerState();
+      }
     );
   };
 
@@ -169,9 +152,11 @@ class DinnersControl extends React.Component {
       // save dates array to state
       this.setState(
         {
-          weeksDates: nextWeek,
+          weeksDates: [...nextWeek],
         },
-        () => {}
+        () => {
+          this.updateDinnerState();
+        }
       );
     }
   };
@@ -192,27 +177,39 @@ class DinnersControl extends React.Component {
       // save array of previous week's dates to state
       this.setState(
         {
-          weeksDates: prevWeek,
+          weeksDates: [...prevWeek],
         },
-        () => {}
+        () => {
+          this.updateDinnerState();
+        }
       );
     }
   };
 
   render() {
+    let dinnerForm;
+    if (this.state.isLoaded) {
+      //console.log('this.state.weeksDinners: ' + this.state.weeksDinners);
+      dinnerForm = (
+        <DinnerFormTwo
+          thisWeeksDates={this.state.weeksDates}
+          dinners={this.state.dinners}
+          preselectedDinners={[...this.state.weeksDinners]}
+          updateDinners={this.updateDinnerState}
+          getFirebase={this.getFirebaseData}
+        />
+      );
+    } else {
+      dinnerForm = <p>loading dinners list...</p>;
+    }
+
     return (
       <>
         <h2>Dinner Schedule</h2>
         {this.weekTitle()}
         <button onClick={this.handlePrevWeek}>Previous Week</button>
         <button onClick={this.handleNextWeek}>Next Week</button>
-        <DinnerFormTwo
-          thisWeeksDates={this.state.weeksDates}
-          dinners={this.state.dinners}
-          preselectedDinners={this.state.weeksDinners}
-          updateDinners={this.updateDinnerState}
-          getFirebase={this.getFirebaseData}
-        />
+        {dinnerForm}
       </>
     );
   }

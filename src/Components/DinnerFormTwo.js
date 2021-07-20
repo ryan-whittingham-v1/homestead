@@ -7,7 +7,7 @@ class DinnerFormTwo extends React.Component {
     this.state = {
       value: '---',
       selectedDayIndex: null, // index for day of week i.e. 0 = Sunday ... 6 = Saturday
-      dinners: ['---', '---', '---', '---', '---', '---', '---'], // array of selected dinner objects
+      dinners: [...props.preselectedDinners], // array of selected dinner objects
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -15,11 +15,8 @@ class DinnerFormTwo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.thisWeeksDates !== prevProps.thisWeeksDates) {
-      this.setState({ dinners: this.props.preselectedDinners });
-    }
     if (this.props.preselectedDinners !== prevProps.preselectedDinners) {
-      this.setState({ dinners: this.props.preselectedDinners });
+      this.setState({ dinners: [...this.props.preselectedDinners] });
     }
   }
 
