@@ -1,24 +1,20 @@
 import firebase from '../firebase.js';
 import React from 'react';
-import DinnerFormTwo from '../Components/DinnerFormTwo';
+import DinnerForm from './DinnerForm';
 
 class DinnersControl extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dinners: [],
-      weeks: [],
-      weeksDates: [],
-      weeksDinners: [],
-      isLoaded: false,
+      dinners: [], // list of all dinners
+      weeks: [], // list of weeks with scheduled dinners
+      weeksDates: [], // dates of the selected week
+      weeksDinners: [], // list of the scheduled dinners for selected week
+      isLoaded: false, // flag for firebase data loading and state update
     };
 
-    this.getCurrentWeek = this.getCurrentWeek.bind(this);
-    this.handleNextWeek = this.handleNextWeek.bind(this);
-    this.handlePrevWeek = this.handlePrevWeek.bind(this);
-    this.getFirebaseData = this.getFirebaseData.bind(this);
-    this.updateDinnerState = this.updateDinnerState.bind(this);
+    this.ref = firebase.database().ref();
   }
 
   componentDidMount() {
@@ -29,6 +25,11 @@ class DinnersControl extends React.Component {
     if (prevState.weeks !== this.state.weeks) {
       this.updateDinnerState();
     }
+  }
+
+  componentWillUnmount() {
+    // disconnect from firebase
+    this.ref.off();
   }
 
   updateDinnerState = () => {
@@ -56,8 +57,7 @@ class DinnersControl extends React.Component {
   };
 
   getFirebaseData = async () => {
-    let ref = firebase.database().ref();
-    ref.on('value', (snapshot) => {
+    this.ref.on('value', (snapshot) => {
       const database = snapshot.val();
       this.setState(
         {
@@ -191,12 +191,10 @@ class DinnersControl extends React.Component {
     if (this.state.isLoaded) {
       //console.log('this.state.weeksDinners: ' + this.state.weeksDinners);
       dinnerForm = (
-        <DinnerFormTwo
+        <DinnerForm
           thisWeeksDates={this.state.weeksDates}
           dinners={this.state.dinners}
           preselectedDinners={[...this.state.weeksDinners]}
-          updateDinners={this.updateDinnerState}
-          getFirebase={this.getFirebaseData}
         />
       );
     } else {

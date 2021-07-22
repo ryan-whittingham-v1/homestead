@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from '../firebase.js';
 
-class DinnerFormTwo extends React.Component {
+class DinnerForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,8 +37,7 @@ class DinnerFormTwo extends React.Component {
           dinners: [...this.state.dinners],
           dates: JSON.parse(JSON.stringify(this.props.thisWeeksDates)),
         },
-      })
-      .then(this.props.getFirebase());
+      });
   }
 
   getDinnerOptions(dinners) {
@@ -138,10 +137,10 @@ class DinnerFormTwo extends React.Component {
           </select>
         </label>
         <br />
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Save" />
       </form>
     );
   }
 }
 
-export default DinnerFormTwo;
+export default DinnerForm;
