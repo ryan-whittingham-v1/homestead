@@ -1,12 +1,15 @@
 import React from 'react';
-import firebase from '../firebase';
 import DinnersControl from '../Components/DinnersControl';
+import Menu from './Menu';
+import { Container } from 'semantic-ui-react';
 
 const Home = () => {
   return (
     <>
-      <button onClick={() => firebase.auth().signOut()}>Sign out</button>
-      <DinnersControl />
+      <Menu />
+      <Container>
+        <h1>Home</h1>
+      </Container>
     </>
   );
 };

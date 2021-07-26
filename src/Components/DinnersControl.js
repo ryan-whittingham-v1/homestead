@@ -1,6 +1,8 @@
 import firebase from '../firebase.js';
 import React from 'react';
 import DinnerForm from './DinnerForm';
+import Menu from './Menu';
+import { Container } from 'semantic-ui-react';
 
 class DinnersControl extends React.Component {
   constructor(props) {
@@ -203,11 +205,14 @@ class DinnersControl extends React.Component {
 
     return (
       <>
-        <h2>Dinner Schedule</h2>
-        {this.weekTitle()}
-        <button onClick={this.handlePrevWeek}>Previous Week</button>
-        <button onClick={this.handleNextWeek}>Next Week</button>
-        {dinnerForm}
+        <Menu />
+        <Container>
+          <h2>Dinner Schedule</h2>
+          {this.weekTitle()}
+          <button onClick={this.handlePrevWeek}>Previous Week</button>
+          <button onClick={this.handleNextWeek}>Next Week</button>
+          {dinnerForm}
+        </Container>
       </>
     );
   }

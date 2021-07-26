@@ -28,6 +28,7 @@ const Login = ({ history }) => {
 
   return (
     <div>
+      <h1>Homestead FRP</h1>
       <form onSubmit={handleLogin}>
         <label>
           Email
