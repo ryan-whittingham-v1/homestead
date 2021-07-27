@@ -35,19 +35,20 @@ class DinnersControl extends React.Component {
   }
 
   updateDinnerState = () => {
-    let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
-    let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
     let flag = false;
-    for (let i = 0; i < weeks.length; i++) {
-      if (sunday === weeks[i]) {
-        this.setState({
-          weeksDinners: [...this.state.weeks[weeks[i]].dinners],
-        });
-        flag = true;
-        return;
+    if (this.state.weeksDates.length > 0) {
+      let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
+      let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
+      for (let i = 0; i < weeks.length; i++) {
+        if (sunday === weeks[i]) {
+          this.setState({
+            weeksDinners: [...this.state.weeks[weeks[i]].dinners],
+          });
+          flag = true;
+          return;
+        }
       }
-    }
-    if (!flag) {
+    } else if (!flag) {
       this.setState(
         {
           weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
