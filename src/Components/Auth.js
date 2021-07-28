@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '../firebase.js';
+import { Loader } from 'semantic-ui-react';
 
 export const AuthContext = React.createContext();
 
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   if (pending) {
-    return <h1>loading...</h1>;
+    return <Loader active inline />;
   }
 
   return (
