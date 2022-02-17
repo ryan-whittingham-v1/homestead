@@ -21,6 +21,7 @@ const Login = ({ history }) => {
   );
 
   const { currentUser } = useContext(AuthContext);
+  console.log('user: ' + JSON.stringify(currentUser));
 
   if (currentUser) {
     return <Redirect to="/" />;
@@ -29,14 +30,18 @@ const Login = ({ history }) => {
   return (
     <div>
       <h1>Homestead FRP</h1>
+      <h4>Demo Login Credentials</h4>
+      <p>email: demouser@whittingham.io </p>
+      <p>password: demo123</p>
+
       <form onSubmit={handleLogin}>
         <label>
           Email
-          <input name="email" type="email" placeholder="Email" />
+          <input name="email" type="email" placeholder="email" />
         </label>
         <label>
           Password
-          <input name="password" type="password" placeholder="Password" />
+          <input name="password" type="password" placeholder="password" />
         </label>
         <button type="submit">Log in</button>
       </form>

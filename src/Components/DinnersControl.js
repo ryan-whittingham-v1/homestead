@@ -1,82 +1,24 @@
 import firebase from '../firebase.js';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DinnerForm from './DinnerForm';
 import Menu from './Menu';
 import { Container } from 'semantic-ui-react';
 
-class DinnersControl extends React.Component {
-  constructor(props) {
-    super(props);
+export default function DinnersControl() {
+  const [currentWeeksDates, setCurrentWeeksDates] = useState([]);
+  const [currentWeeksDinners, setCurrentWeeksDinners] = useState([
+    '---',
+    '---',
+    '---',
+    '---',
+    '---',
+    '---',
+    '---',
+  ]);
+  const [userData, setUserData] = useState({});
+  const [isLoaded, setIsLoaded] = useState(false);
 
-    this.state = {
-      dinners: [], // list of all dinners
-      weeks: [], // list of weeks with scheduled dinners
-      weeksDates: [], // dates of the selected week
-      weeksDinners: [], // list of the scheduled dinners for selected week
-      isLoaded: false, // flag for firebase data loading and state update
-    };
-
-    this.ref = firebase.database().ref();
-  }
-
-  componentDidMount() {
-    this.getCurrentWeek();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.weeks !== this.state.weeks) {
-      this.updateDinnerState();
-    }
-  }
-
-  componentWillUnmount() {
-    // disconnect from firebase
-    this.ref.off();
-  }
-
-  updateDinnerState = () => {
-    let flag = false;
-    if (this.state.weeksDates.length > 0) {
-      let weeks = Object.keys(JSON.parse(JSON.stringify(this.state.weeks)));
-      let sunday = JSON.stringify(this.state.weeksDates[0]).substring(1, 11);
-      for (let i = 0; i < weeks.length; i++) {
-        if (sunday === weeks[i]) {
-          this.setState({
-            weeksDinners: [...this.state.weeks[weeks[i]].dinners],
-          });
-          flag = true;
-          return;
-        }
-      }
-    } else if (!flag) {
-      this.setState(
-        {
-          weeksDinners: ['---', '---', '---', '---', '---', '---', '---'],
-        },
-
-        () => {}
-      );
-    }
-  };
-
-  getFirebaseData = async () => {
-    this.ref.on('value', (snapshot) => {
-      const database = snapshot.val();
-      this.setState(
-        {
-          dinners: database.dinners,
-          weeks: database.weeks,
-          isLoaded: true,
-        },
-        () => {
-          return 1;
-        }
-      );
-    });
-  };
-
-  getCurrentWeek = async () => {
-    await this.getFirebaseData();
+  function getCurrentWeek() {
     // get today's date
     let today = new Date();
     // set today's time to end of day
@@ -105,21 +47,66 @@ class DinnersControl extends React.Component {
       today = tomorrow;
     }
     // save dates array to state
-    this.setState(
-      {
-        weeksDates: [...dates],
-      },
-      () => {
-        this.updateDinnerState();
-      }
-    );
-  };
+    setCurrentWeeksDates(dates);
+  }
 
-  weekTitle() {
+  function handleNextWeek() {
+    // create empty array for next week dates
+    let nextWeek = [];
+    let dates = [...currentWeeksDates];
+    // create new week of dates based off of last day of current week
+    if (dates) {
+      let prevSunday = new Date(dates[6]);
+      for (let i = 1; i <= 7; i++) {
+        let nextDay = new Date(prevSunday);
+        nextDay.setDate(nextDay.getDate() + i);
+        nextDay.setHours(23, 59, 59, 999);
+        nextWeek.push(nextDay);
+      }
+      // save dates array to state
+      setCurrentWeeksDates([...nextWeek]);
+    }
+  }
+
+  function handlePrevWeek() {
+    let dates = [...currentWeeksDates];
+    // create empty array for next week dates
+    let prevWeek = [];
+    // create new week of dates based off of last day of current week
+    if (dates) {
+      let currentSunday = new Date(dates[0]);
+      for (let i = 1; i <= 7; i++) {
+        let nextPrevDay = new Date(currentSunday);
+        nextPrevDay.setDate(nextPrevDay.getDate() - i);
+        nextPrevDay.setHours(23, 59, 59, 999);
+        prevWeek.unshift(nextPrevDay);
+      }
+      // save array of previous week's dates to state
+      setCurrentWeeksDates([...prevWeek]);
+    }
+  }
+
+  function getUserData() {
+    let userId = firebase.auth().currentUser.uid;
+    firebase
+      .database()
+      .ref('users/' + userId + '/')
+      .on('value', (snapshot) => {
+        const firebaseData = snapshot.val();
+        /* console.log(firebaseData);
+        for (let [key, value] of Object.entries(firebaseData.weeks)) {
+          console.log(`${key}: ${value}`);
+        } */
+        setUserData(firebaseData);
+        setIsLoaded(true);
+      });
+  }
+
+  function weekTitle() {
     // if week info present
-    if (this.state.weeksDates) {
-      let firstDayOfWeek = new Date(this.state.weeksDates[0]);
-      let lastDayOfWeek = new Date(this.state.weeksDates[6]);
+    if (currentWeeksDates) {
+      let firstDayOfWeek = new Date(currentWeeksDates[0]);
+      let lastDayOfWeek = new Date(currentWeeksDates[6]);
       let startOfWeekMonth = firstDayOfWeek.getMonth() + 1;
       let endOfWeekMonth = lastDayOfWeek.getMonth() + 1;
       return (
@@ -139,84 +126,60 @@ class DinnersControl extends React.Component {
     }
   }
 
-  handleNextWeek = () => {
-    // create empty array for next week dates
-    let nextWeek = [];
-    let dates = [...this.state.weeksDates];
-    // create new week of dates based off of last day of current week
-    if (dates) {
-      let prevSunday = new Date(dates[6]);
-      for (let i = 1; i <= 7; i++) {
-        let nextDay = new Date(prevSunday);
-        nextDay.setDate(nextDay.getDate() + i);
-        nextDay.setHours(23, 59, 59, 999);
-        nextWeek.push(nextDay);
-      }
-      // save dates array to state
-      this.setState(
-        {
-          weeksDates: [...nextWeek],
-        },
-        () => {
-          this.updateDinnerState();
+  function getWeeksDinners() {
+    if (isLoaded) {
+      setCurrentWeeksDinners(['---', '---', '---', '---', '---', '---', '---']);
+
+      if (currentWeeksDates.length > 0) {
+        if (userData.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]]) {
+          let weeksDinners =
+            userData?.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]]
+              ?.dinners;
+          if (weeksDinners) {
+            setCurrentWeeksDinners([...weeksDinners]);
+          }
         }
-      );
-    }
-  };
-
-  handlePrevWeek = () => {
-    let dates = [...this.state.weeksDates];
-    // create empty array for next week dates
-    let prevWeek = [];
-    // create new week of dates based off of last day of current week
-    if (dates) {
-      let currentSunday = new Date(dates[0]);
-      for (let i = 1; i <= 7; i++) {
-        let nextPrevDay = new Date(currentSunday);
-        nextPrevDay.setDate(nextPrevDay.getDate() - i);
-        nextPrevDay.setHours(23, 59, 59, 999);
-        prevWeek.unshift(nextPrevDay);
       }
-      // save array of previous week's dates to state
-      this.setState(
-        {
-          weeksDates: [...prevWeek],
-        },
-        () => {
-          this.updateDinnerState();
-        }
-      );
     }
-  };
-
-  render() {
-    let dinnerForm;
-    if (this.state.isLoaded) {
-      //console.log('this.state.weeksDinners: ' + this.state.weeksDinners);
-      dinnerForm = (
-        <DinnerForm
-          thisWeeksDates={this.state.weeksDates}
-          dinners={this.state.dinners}
-          preselectedDinners={[...this.state.weeksDinners]}
-        />
-      );
-    } else {
-      dinnerForm = <p>loading dinners list...</p>;
-    }
-
-    return (
-      <>
-        <Menu />
-        <Container>
-          <h2>Dinner Schedule</h2>
-          {this.weekTitle()}
-          <button onClick={this.handlePrevWeek}>Previous Week</button>
-          <button onClick={this.handleNextWeek}>Next Week</button>
-          {dinnerForm}
-        </Container>
-      </>
-    );
   }
+
+  // update local state at initial startup
+  useEffect(() => {
+    getCurrentWeek();
+    getUserData();
+  }, []);
+
+  // update local state at initial startup
+  useEffect(() => {
+    getWeeksDinners();
+  }, [isLoaded, currentWeeksDates]);
+
+  return (
+    <>
+      <Menu />
+      <Container>
+        <h2>Dinner Schedule</h2>
+        {weekTitle()}
+        <button type="button" onClick={handlePrevWeek}>
+          Previous Week
+        </button>
+        <button type="button" onClick={handleNextWeek}>
+          Next Week
+        </button>
+        <DinnerForm
+          dinners={userData.dinners}
+          weekDates={currentWeeksDates}
+          selectedDinners={currentWeeksDinners}
+        />
+      </Container>
+    </>
+  );
 }
 
-export default DinnersControl;
+/* 
+
+  componentWillUnmount() {
+    // disconnect from firebase
+    this.ref.off();
+  }
+*/

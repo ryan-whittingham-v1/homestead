@@ -3,9 +3,6 @@ import { Dropdown } from 'semantic-ui-react';
 import firebase from '../firebase';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-import DinnersControl from './DinnersControl';
-import Home from './Home';
-
 const Menu = () => (
   <Dropdown
     text="Menu"
