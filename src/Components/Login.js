@@ -2,6 +2,7 @@ import React, { useCallback, useContext } from 'react';
 import { withRouter, Redirect } from 'react-router';
 import firebase from '../firebase.js';
 import { AuthContext } from './Auth.js';
+import styles from '../Styles/login.module.css';
 
 const Login = ({ history }) => {
   const handleLogin = useCallback(
@@ -28,23 +29,28 @@ const Login = ({ history }) => {
   }
 
   return (
-    <div>
-      <h1>Homestead FRP</h1>
-      <h4>Demo Login Credentials</h4>
-      <p>email: demouser@whittingham.io </p>
-      <p>password: demo123</p>
+    <div className={styles.wrapper}>
+      <h1 className={styles.header}>Homestead Meal Planner</h1>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className={styles.form}>
         <label>
-          Email
+          <p>Email</p>
           <input name="email" type="email" placeholder="email" />
         </label>
         <label>
-          Password
+          <p>Password</p>
           <input name="password" type="password" placeholder="password" />
         </label>
-        <button type="submit">Log in</button>
+        <div className={styles.buttonWrapper}>
+          <button type="submit">Log in</button>
+        </div>
       </form>
+      <div className={styles.demoWrapper}>
+        <h4>WANT TO DEMO THE APP?</h4>
+        <p>Use the following credentials to see Homestead in action.</p>
+        <p>Email: demouser@whittingham.io </p>
+        <p>Password: demo123</p>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import firebase from '../firebase.js';
+import styles from '../Styles/dinnerForm.module.css';
 
 export default function DinnerForm(props) {
   const [selectedDayIndex, setSelectedDayIndex] = useState(null); // index for day of week i.e. 0 = Sunday ... 6 = Saturday
@@ -67,6 +68,7 @@ export default function DinnerForm(props) {
           dates: JSON.parse(JSON.stringify(props.weekDates)),
         },
       });
+    window.alert('Dinners Saved!');
   }
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export default function DinnerForm(props) {
   }, [props.selectedDinners]);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form onSubmit={(e) => handleSubmit(e)} className={styles.form}>
       <label onClick={() => setSelectedDayIndex(0)}>
         Sunday
         <br />
@@ -138,7 +140,9 @@ export default function DinnerForm(props) {
         </select>
       </label>
       <br />
-      <input type="submit" value="Save" />
+      <div className={styles.buttonWrapper}>
+        <button type="submit">Save</button>
+      </div>
     </form>
   );
 }

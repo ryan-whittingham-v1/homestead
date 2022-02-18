@@ -10,7 +10,7 @@ function Day(props) {
           {props.day.date.getFullYear()}
         </Header>
         <h1>Tonight's Dinner</h1>
-        <h3>{props.day.dinner}</h3>
+        <h3>{props.day.dinner.toUpperCase()}</h3>
       </>
     );
   } else {

@@ -2,7 +2,7 @@ import firebase from '../firebase.js';
 import React, { useEffect, useState } from 'react';
 import DinnerForm from './DinnerForm';
 import Menu from './Menu';
-import { Container } from 'semantic-ui-react';
+import styles from '../Styles/dinnersControl.module.css';
 
 export default function DinnersControl() {
   const [currentWeeksDates, setCurrentWeeksDates] = useState([]);
@@ -157,21 +157,23 @@ export default function DinnersControl() {
   return (
     <>
       <Menu />
-      <Container>
-        <h2>Dinner Schedule</h2>
+      <div className={styles.wrapper}>
+        <h2>DINNER SCHEDULE</h2>
         {weekTitle()}
-        <button type="button" onClick={handlePrevWeek}>
-          Previous Week
-        </button>
-        <button type="button" onClick={handleNextWeek}>
-          Next Week
-        </button>
+        <div className={styles.weekNavWrapper}>
+          <button type="button" onClick={handlePrevWeek}>
+            Previous Week
+          </button>
+          <button type="button" onClick={handleNextWeek}>
+            Next Week
+          </button>
+        </div>
         <DinnerForm
           dinners={userData.dinners}
           weekDates={currentWeeksDates}
           selectedDinners={currentWeeksDinners}
         />
-      </Container>
+      </div>
     </>
   );
 }

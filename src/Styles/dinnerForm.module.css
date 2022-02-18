@@ -1,0 +1,13 @@
+.form select {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+.buttonWrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+.form button {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}

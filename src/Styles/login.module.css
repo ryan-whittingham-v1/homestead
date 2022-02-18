@@ -1,0 +1,48 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  flex: 1 100%;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: calc(4vw + 4vh / 2);
+  margin: 20px 0px 0px 0px;
+  padding: 0px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 300px;
+  border-radius: 10px;
+}
+
+.form label {
+  padding: 10px;
+}
+
+.form input {
+  width: 100%;
+  font-size: 1.2rem;
+}
+.buttonWrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+.form button {
+  width: 100px;
+  margin-top: 10px;
+}
+
+.demoWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}

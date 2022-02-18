@@ -3,6 +3,7 @@ import Menu from './Menu';
 import Day from './Day';
 import firebase from '../firebase.js';
 import { Loader } from 'semantic-ui-react';
+import styles from '../Styles/home.module.css';
 
 const Home = () => {
   const [userData, setUserData] = useState({});
@@ -79,13 +80,14 @@ const Home = () => {
     }
   }, [isLoaded]);
 
-  let visibleState = [<Menu />, <Loader active inline="centered" />];
-
-  if (isLoaded) {
-    visibleState = [<Menu />, <Day day={today} />];
-  }
-
-  return visibleState;
+  return (
+    <>
+      <Menu />
+      <div className={styles.wrapper}>
+        {isLoaded ? <Day day={today} /> : <Loader active inline="centered" />}
+      </div>
+    </>
+  );
 };
 
 export default Home;
