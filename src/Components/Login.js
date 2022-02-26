@@ -22,7 +22,6 @@ const Login = ({ history }) => {
   );
 
   const { currentUser } = useContext(AuthContext);
-  console.log('user: ' + JSON.stringify(currentUser));
 
   if (currentUser) {
     return <Redirect to="/" />;
@@ -48,8 +47,8 @@ const Login = ({ history }) => {
       <div className={styles.demoWrapper}>
         <h4>WANT TO DEMO THE APP?</h4>
         <p>Use the following credentials to see Homestead in action.</p>
-        <p>Email: demouser@whittingham.io </p>
-        <p>Password: demo123</p>
+        <p>Email: demoapp@whittingham.io </p>
+        <p>Password: demo.password</p>
       </div>
     </div>
   );
