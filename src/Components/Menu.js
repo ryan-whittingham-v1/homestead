@@ -14,7 +14,7 @@ const Menu = () => (
   >
     <Dropdown.Menu>
       <Dropdown.Item icon="home" text="Home" as={Link} to="/" />
-      <Dropdown.Item icon="food" text="Dinners" as={Link} to="/dinners" />
+      <Dropdown.Item icon="food" text="Schedule" as={Link} to="/dinners" />
       <Dropdown.Divider />
       <Dropdown.Item
         icon="sign-out"

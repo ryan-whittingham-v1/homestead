@@ -6,15 +6,7 @@ import styles from '../Styles/dinnersControl.module.css';
 
 export default function DinnersControl() {
   const [currentWeeksDates, setCurrentWeeksDates] = useState([]);
-  const [currentWeeksDinners, setCurrentWeeksDinners] = useState([
-    '---',
-    '---',
-    '---',
-    '---',
-    '---',
-    '---',
-    '---',
-  ]);
+  const [currentWeeksDinners, setCurrentWeeksDinners] = useState([]);
   const [userData, setUserData] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -93,10 +85,6 @@ export default function DinnersControl() {
       .ref('users/' + userId + '/')
       .on('value', (snapshot) => {
         const firebaseData = snapshot.val();
-        /* console.log(firebaseData);
-        for (let [key, value] of Object.entries(firebaseData.weeks)) {
-          console.log(`${key}: ${value}`);
-        } */
         setUserData(firebaseData);
         setIsLoaded(true);
       });
@@ -127,19 +115,16 @@ export default function DinnersControl() {
   }
 
   function getWeeksDinners() {
-    if (isLoaded) {
+    let weeksData =
+      userData?.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]];
+    if (weeksData?.length > 0) {
+      let weeksDinners = weeksData.map((day) => day.dinner);
+      /* let weeksDinners = weeksDinnersIDs.map(
+        (id) => userData.dinners[id]?.name
+      ); */
+      setCurrentWeeksDinners([...weeksDinners]);
+    } else {
       setCurrentWeeksDinners(['---', '---', '---', '---', '---', '---', '---']);
-
-      if (currentWeeksDates.length > 0) {
-        if (userData.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]]) {
-          let weeksDinners =
-            userData?.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]]
-              ?.dinners;
-          if (weeksDinners) {
-            setCurrentWeeksDinners([...weeksDinners]);
-          }
-        }
-      }
     }
   }
 
@@ -147,11 +132,17 @@ export default function DinnersControl() {
   useEffect(() => {
     getCurrentWeek();
     getUserData();
+
+    // cleanup
+    return () => {
+      firebase.database().goOffline();
+    };
   }, []);
 
-  // update local state at initial startup
   useEffect(() => {
-    getWeeksDinners();
+    if (isLoaded) {
+      getWeeksDinners();
+    }
   }, [isLoaded, currentWeeksDates]);
 
   return (

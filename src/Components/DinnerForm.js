@@ -5,15 +5,13 @@ import styles from '../Styles/dinnerForm.module.css';
 
 export default function DinnerForm(props) {
   const [selectedDayIndex, setSelectedDayIndex] = useState(null); // index for day of week i.e. 0 = Sunday ... 6 = Saturday
-  const [selectedDinners, setSelectedDinners] = useState([
-    props.currentWeeksDinners,
-  ]); // array of selected dinner objects
+  const [selectedDinners, setSelectedDinners] = useState(props.selectedDinners); // array of selected dinner objects
 
   // Dinner Sorting Function
   function compare(a, b) {
     // Use toUpperCase() to ignore character casing
-    const nameA = a.name.toUpperCase();
-    const nameB = b.name.toUpperCase();
+    const nameA = a.toUpperCase();
+    const nameB = b.toUpperCase();
 
     let comparison = 0;
     if (nameA > nameB) {
@@ -25,17 +23,21 @@ export default function DinnerForm(props) {
   }
 
   function getDinnerOptions(dinners) {
-    // if dinners array is not empty
-    if (dinners?.length > 0) {
+    // if dinners is not empty
+    if (dinners) {
+      let dinnerNames = [];
+      for (const [key, value] of Object.entries(dinners)) {
+        dinnerNames.push(value.name);
+      }
       // sort dinners
-      let sortedDinners = [...dinners];
+      let sortedDinners = [...dinnerNames];
       sortedDinners.sort(compare);
 
       // create html option for each dinner
-      return sortedDinners.map((dinner) => {
+      return sortedDinners.map((dinner, index) => {
         return (
-          <option key={dinner?.index} value={dinner?.name}>
-            {dinner?.name.toUpperCase()}
+          <option key={index} value={dinner}>
+            {dinner.toUpperCase()}
           </option>
         );
       });
@@ -55,18 +57,25 @@ export default function DinnerForm(props) {
   }
 
   function handleSubmit(e) {
-    let userId = firebase.auth().currentUser.uid;
+    //convert preselectedDinners to dinner ids
 
+    //
+    let userId = firebase.auth().currentUser.uid;
     e.preventDefault();
     firebase
       .database()
       .ref('users/' + userId + '/')
       .child('weeks')
       .update({
-        [JSON.stringify(props.weekDates[0]).substring(1, 11)]: {
-          dinners: [...selectedDinners],
-          dates: JSON.parse(JSON.stringify(props.weekDates)),
-        },
+        [JSON.stringify(props.weekDates[0]).substring(1, 11)]: [
+          { dinner: selectedDinners[0] },
+          { dinner: selectedDinners[1] },
+          { dinner: selectedDinners[2] },
+          { dinner: selectedDinners[3] },
+          { dinner: selectedDinners[4] },
+          { dinner: selectedDinners[5] },
+          { dinner: selectedDinners[6] },
+        ],
       });
     window.alert('Dinners Saved!');
   }

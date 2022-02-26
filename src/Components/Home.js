@@ -8,11 +8,7 @@ import styles from '../Styles/home.module.css';
 const Home = () => {
   const [userData, setUserData] = useState({});
   const [currentWeeksDates, setCurrentWeeksDates] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [today, setToday] = useState({
-    date: new Date(),
-    dinner: '',
-  });
+  const [today, setToday] = useState({ date: new Date() });
 
   function getCurrentWeek() {
     // get today's date
@@ -54,17 +50,25 @@ const Home = () => {
       .on('value', (snapshot) => {
         const firebaseData = snapshot.val();
         setUserData(firebaseData);
-        setIsLoaded(true);
       });
   }
 
-  function getTodaysDinner() {
-    let todaysDinner =
-      userData?.weeks[currentWeeksDates[0].toISOString().split('T')[0]]
-        ?.dinners[today.date.getDay()];
+  function getTodaysData() {
+    let todayTemp =
+      userData.weeks[currentWeeksDates[0].toISOString().split('T')[0]][
+        today.date.getDay()
+      ];
+    let dinner = todayTemp.dinner;
+    let dinnerId = '';
+    for (const [key, value] of Object.entries(userData.dinners)) {
+      if (dinner === value.name) {
+        dinnerId = key;
+      }
+    }
     setToday((prevState) => ({
       ...prevState,
-      dinner: todaysDinner ? todaysDinner : 'No Dinner Scheduled',
+      dinner: dinnerId ? userData.dinners[dinnerId] : 'No Dinner Scheduled',
+      messages: todayTemp.messages ? todayTemp.messages : '',
     }));
   }
 
@@ -72,19 +76,24 @@ const Home = () => {
   useEffect(() => {
     getCurrentWeek();
     getUserData();
+
+    // cleanup
+    return () => {
+      firebase.database().goOffline();
+    };
   }, []);
 
   useEffect(() => {
-    if (currentWeeksDates.length > 0) {
-      getTodaysDinner();
+    if (userData && currentWeeksDates.length === 7) {
+      getTodaysData();
     }
-  }, [isLoaded]);
+  }, [userData]);
 
   return (
     <>
       <Menu />
       <div className={styles.wrapper}>
-        {isLoaded ? <Day day={today} /> : <Loader active inline="centered" />}
+        {userData ? <Day day={today} /> : <Loader active inline="centered" />}
       </div>
     </>
   );

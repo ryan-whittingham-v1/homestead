@@ -1,0 +1,22 @@
+
+Users : {
+    user : {
+        dinners : {
+            dinner : {
+                name: "",
+                ingredients: [""],
+                notes: ""
+            }
+        },
+        weeks : {
+            week : [
+                  {
+                        date: {},
+                        dinner: {},
+                        messages: [""] 
+                    }
+                ] 
+            
+        }
+    }
+}
