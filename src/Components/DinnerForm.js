@@ -57,9 +57,6 @@ export default function DinnerForm(props) {
   }
 
   function handleSubmit(e) {
-    //convert preselectedDinners to dinner ids
-
-    //
     let userId = firebase.auth().currentUser.uid;
     e.preventDefault();
     firebase

@@ -77,10 +77,10 @@ const Home = () => {
     getCurrentWeek();
     getUserData();
 
-    // cleanup
+    /* // cleanup
     return () => {
       firebase.database().goOffline();
-    };
+    }; */
   }, []);
 
   useEffect(() => {

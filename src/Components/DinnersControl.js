@@ -133,10 +133,10 @@ export default function DinnersControl() {
     getCurrentWeek();
     getUserData();
 
-    // cleanup
+    /*  // cleanup
     return () => {
       firebase.database().goOffline();
-    };
+    }; */
   }, []);
 
   useEffect(() => {
