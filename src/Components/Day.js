@@ -16,12 +16,13 @@ function Day(props) {
             <li key={index}>{ingredient}</li>
           ))}
         </ul>
-        {/* <p>Today's Anouncements</p>
-        <ul>
-          {props?.day?.messages.map((message, index) => (
-            <li key={index}>{message}</li>
-          ))}
-        </ul> */}
+        {props?.day?.messages && <h3>Today's Notes</h3> && (
+          <ul>
+            {props?.day?.messages?.map((message, index) => (
+              <li key={index}>{message}</li>
+            ))}
+          </ul>
+        )}
       </>
     );
   } else {

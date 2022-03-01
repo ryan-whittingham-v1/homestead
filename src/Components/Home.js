@@ -47,7 +47,7 @@ const Home = () => {
     firebase
       .database()
       .ref('users/' + userId + '/')
-      .on('value', (snapshot) => {
+      .once('value', (snapshot) => {
         const firebaseData = snapshot.val();
         setUserData(firebaseData);
       });
@@ -68,7 +68,7 @@ const Home = () => {
     setToday((prevState) => ({
       ...prevState,
       dinner: dinnerId ? userData.dinners[dinnerId] : 'No Dinner Scheduled',
-      messages: todayTemp.messages ? todayTemp.messages : '',
+      messages: todayTemp?.messages ? todayTemp?.messages : '',
     }));
   }
 
@@ -76,11 +76,6 @@ const Home = () => {
   useEffect(() => {
     getCurrentWeek();
     getUserData();
-
-    /* // cleanup
-    return () => {
-      firebase.database().goOffline();
-    }; */
   }, []);
 
   useEffect(() => {

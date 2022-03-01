@@ -59,21 +59,21 @@ export default function DinnerForm(props) {
   function handleSubmit(e) {
     let userId = firebase.auth().currentUser.uid;
     e.preventDefault();
-    firebase
-      .database()
-      .ref('users/' + userId + '/')
-      .child('weeks')
-      .update({
-        [JSON.stringify(props.weekDates[0]).substring(1, 11)]: [
-          { dinner: selectedDinners[0] },
-          { dinner: selectedDinners[1] },
-          { dinner: selectedDinners[2] },
-          { dinner: selectedDinners[3] },
-          { dinner: selectedDinners[4] },
-          { dinner: selectedDinners[5] },
-          { dinner: selectedDinners[6] },
-        ],
-      });
+    for (let i = 0; i < selectedDinners.length; i++) {
+      firebase
+        .database()
+        .ref(
+          'users/' +
+            userId +
+            '/weeks/' +
+            JSON.stringify(props.weekDates[0]).substring(1, 11) +
+            '/' +
+            i +
+            '/'
+        )
+        .update({ dinner: selectedDinners[i] });
+    }
+
     window.alert('Dinners Saved!');
   }
 

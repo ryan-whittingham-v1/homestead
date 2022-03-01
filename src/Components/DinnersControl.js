@@ -83,7 +83,7 @@ export default function DinnersControl() {
     firebase
       .database()
       .ref('users/' + userId + '/')
-      .on('value', (snapshot) => {
+      .once('value', (snapshot) => {
         const firebaseData = snapshot.val();
         setUserData(firebaseData);
         setIsLoaded(true);
