@@ -16,6 +16,7 @@ function Day(props) {
             <li key={index}>{ingredient}</li>
           ))}
         </ul>
+        <p>{props?.day?.dinner?.notes}</p>
         {props?.day?.messages && <h3>Today's Notes</h3> && (
           <ul>
             {props?.day?.messages?.map((message, index) => (

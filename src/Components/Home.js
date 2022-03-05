@@ -63,6 +63,7 @@ const Home = () => {
     for (const [key, value] of Object.entries(userData.dinners)) {
       if (dinner === value.name) {
         dinnerId = key;
+        break;
       }
     }
     setToday((prevState) => ({

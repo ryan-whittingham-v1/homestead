@@ -132,11 +132,6 @@ export default function DinnersControl() {
   useEffect(() => {
     getCurrentWeek();
     getUserData();
-
-    /*  // cleanup
-    return () => {
-      firebase.database().goOffline();
-    }; */
   }, []);
 
   useEffect(() => {
@@ -168,11 +163,3 @@ export default function DinnersControl() {
     </>
   );
 }
-
-/* 
-
-  componentWillUnmount() {
-    // disconnect from firebase
-    this.ref.off();
-  }
-*/
