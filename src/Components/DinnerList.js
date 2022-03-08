@@ -18,23 +18,11 @@ export default function DinnerList(props) {
     return comparison;
   }
 
-  function updateButtons() {
-    /* let dinnerNames = [];
-    for (const [key, value] of Object.entries(props?.dinners)) {
-      dinnerNames.push(value.name);
-    }
-    // sort dinners
-    let sortedDinners = [...dinnerNames];
-    sortedDinners.sort(compare);
+  function addDinner() {
+    props.addDinner();
+  }
 
-    // create html option for each dinner
-    return sortedDinners.map((dinner, index) => {
-      return (
-        <button type="button" onClick={() => props.callback(dinner)}>
-          {dinner.toUpperCase()}
-        </button>
-      );
-    }); */
+  function createButtons() {
     let dinners = [];
     for (const [key, value] of Object.entries(props?.dinners)) {
       dinners.push(
@@ -46,5 +34,12 @@ export default function DinnerList(props) {
     return dinners;
   }
 
-  return <div className={styles.wrapper}>{updateButtons()}</div>;
+  return (
+    <div className={styles.wrapper}>
+      {createButtons()}
+      <button type="button" onClick={addDinner}>
+        +
+      </button>
+    </div>
+  );
 }

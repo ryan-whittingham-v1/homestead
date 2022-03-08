@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '../firebase.js';
+import { v4 as uuidv4 } from 'uuid';
 
 import Menu from './Menu';
 import DinnerList from './DinnerList';
@@ -27,11 +28,26 @@ export default function EditDinners() {
     setSelectedDinner(userDinners[dinner]);
   }
 
-  function addIngredient() {
-    setSelectedDinner({
-      ...selectedDinner,
-      ingredients: [...selectedDinner.ingredients, ''],
+  function addDinner() {
+    let id = uuidv4();
+    setUserDinners({
+      ...userDinners,
+      [id]: { name: 'new dinner' },
     });
+  }
+
+  function addIngredient() {
+    if (selectedDinner.ingredients) {
+      setSelectedDinner({
+        ...selectedDinner,
+        ingredients: [...selectedDinner?.ingredients, ''],
+      });
+    } else {
+      setSelectedDinner({
+        ...selectedDinner,
+        ingredients: [''],
+      });
+    }
   }
 
   function removeIngredient(index) {
@@ -53,7 +69,12 @@ export default function EditDinners() {
       .update(selectedDinner);
 
     window.alert('Dinner Saved!');
+    getUserDinners();
   }
+
+  useEffect(() => {
+    getUserDinners();
+  }, []);
 
   useEffect(() => {
     getUserDinners();
@@ -64,7 +85,11 @@ export default function EditDinners() {
       <Menu />
       <div className={styles.wrapper}>
         <div className={styles.left}>
-          <DinnerList dinners={userDinners} callback={listCallback} />
+          <DinnerList
+            dinners={userDinners}
+            callback={listCallback}
+            addDinner={addDinner}
+          />
         </div>
         <div className={styles.right}>
           <form
