@@ -29,7 +29,20 @@ const Login = ({ history }) => {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.header}>Homestead Meal Planner</h1>
+      <div className={styles.header}>
+        <div
+          className={styles.logo}
+          style={{
+            backgroundImage: "url('/logo512.png')",
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right',
+          }}
+        ></div>
+        <div className={styles.headerText}>
+          <h1>HOMESTEAD</h1>
+        </div>
+      </div>
 
       <form onSubmit={handleLogin} className={styles.form}>
         <label>
@@ -41,12 +54,11 @@ const Login = ({ history }) => {
           <input name="password" type="password" placeholder="password" />
         </label>
         <div className={styles.buttonWrapper}>
-          <button type="submit">Log in</button>
+          <button type="submit">Log In</button>
         </div>
       </form>
       <div className={styles.demoWrapper}>
-        <h4>WANT TO DEMO THE APP?</h4>
-        <p>Use the following credentials to see Homestead in action.</p>
+        <h1>DEMO ACCOUNT</h1>
         <p>Email: demoapp@whittingham.io </p>
         <p>Password: demo.password</p>
       </div>
