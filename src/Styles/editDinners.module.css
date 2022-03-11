@@ -8,8 +8,10 @@
 
 .right {
   flex: 1 70%;
+  display: flex;
 }
 
 .form {
-  margin: 20px;
+  margin-top: 50px;
+  margin-right: 20px;
 }

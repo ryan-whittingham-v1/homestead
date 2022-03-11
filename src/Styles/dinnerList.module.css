@@ -3,5 +3,10 @@
   flex-direction: column;
   margin: 20px;
   height: 85vh;
+}
+
+.list {
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 }
