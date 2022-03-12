@@ -33,7 +33,7 @@ function Day(props) {
         <h1>Tonight's Dinner</h1>
         <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
         <ul>
-          {props?.day?.dinner?.ingredients.map((ingredient, index) => (
+          {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
             <li key={index}>{ingredient}</li>
           ))}
         </ul>

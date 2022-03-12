@@ -118,10 +118,9 @@ export default function DinnersControl() {
     let weeksData =
       userData?.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]];
     if (weeksData?.length > 0) {
-      let weeksDinners = weeksData.map((day) => day.dinner);
-      /* let weeksDinners = weeksDinnersIDs.map(
-        (id) => userData.dinners[id]?.name
-      ); */
+      let weeksDinners = weeksData.map((day) =>
+        userData.dinners[day.dinner] ? userData.dinners[day.dinner].name : '---'
+      );
       setCurrentWeeksDinners([...weeksDinners]);
     } else {
       setCurrentWeeksDinners(['---', '---', '---', '---', '---', '---', '---']);
@@ -135,10 +134,14 @@ export default function DinnersControl() {
   }, []);
 
   useEffect(() => {
+    getUserData();
+  }, [currentWeeksDates]);
+
+  useEffect(() => {
     if (isLoaded) {
       getWeeksDinners();
     }
-  }, [isLoaded, currentWeeksDates]);
+  }, [userData, isLoaded]);
 
   return (
     <>

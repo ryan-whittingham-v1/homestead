@@ -59,16 +59,10 @@ const Home = () => {
         today.date.getDay()
       ];
     let dinner = todayTemp.dinner;
-    let dinnerId = '';
-    for (const [key, value] of Object.entries(userData.dinners)) {
-      if (dinner === value.name) {
-        dinnerId = key;
-        break;
-      }
-    }
+
     setToday((prevState) => ({
       ...prevState,
-      dinner: dinnerId ? userData.dinners[dinnerId] : 'No Dinner Scheduled',
+      dinner: dinner ? userData.dinners[dinner] : 'No Dinner Scheduled',
       messages: todayTemp?.messages ? todayTemp?.messages : '',
     }));
   }

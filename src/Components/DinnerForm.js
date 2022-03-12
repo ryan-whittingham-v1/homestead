@@ -10,8 +10,8 @@ export default function DinnerForm(props) {
   // Dinner Sorting Function
   function compare(a, b) {
     // Use toUpperCase() to ignore character casing
-    const nameA = a.toUpperCase();
-    const nameB = b.toUpperCase();
+    const nameA = a.props.value.toUpperCase();
+    const nameB = b.props.value.toUpperCase();
 
     let comparison = 0;
     if (nameA > nameB) {
@@ -25,29 +25,30 @@ export default function DinnerForm(props) {
   function getDinnerOptions(dinners) {
     // if dinners is not empty
     if (dinners) {
-      let dinnerNames = [];
-      for (const [key, value] of Object.entries(dinners)) {
-        dinnerNames.push(value.name);
-      }
-      // sort dinners
-      let sortedDinners = [...dinnerNames];
-      sortedDinners.sort(compare);
+      let dinnersArray = [];
 
-      // create html option for each dinner
-      return sortedDinners.map((dinner, index) => {
-        return (
-          <option key={index} value={dinner}>
-            {dinner.toUpperCase()}
+      for (const [key, value] of Object.entries(dinners)) {
+        dinnersArray.push(
+          <option key={key} value={value.name}>
+            {value.name.toUpperCase()}
           </option>
         );
-      });
+      }
+      // sort dinners
+      dinnersArray.sort(compare);
+      return dinnersArray;
     } else {
-      return (
-        <option key={'loading'} value="loading">
-          loading...
-        </option>
-      );
+      return <option>loading...</option>;
     }
+  }
+
+  function getDinnerID(dinner) {
+    for (const [key, value] of Object.entries(props.dinners)) {
+      if (dinner === value.name) {
+        return key;
+      }
+    }
+    return '--';
   }
 
   function handleChange(event) {
@@ -71,7 +72,7 @@ export default function DinnerForm(props) {
             i +
             '/'
         )
-        .update({ dinner: selectedDinners[i] });
+        .update({ dinner: getDinnerID(selectedDinners[i]) });
     }
 
     window.alert('Dinners Saved!');
