@@ -13,3 +13,15 @@
 .weekNavWrapper button {
   width: 150px;
 }
+
+.editWeek {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.editWeek button {
+  flex: 1 100%;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}

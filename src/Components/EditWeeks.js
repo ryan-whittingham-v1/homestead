@@ -1,12 +1,12 @@
 import firebase from '../firebase.js';
 import React, { useEffect, useState } from 'react';
-import DinnerForm from './DinnerForm';
 import Menu from './Menu';
-import styles from '../Styles/dinnersControl.module.css';
+import styles from '../Styles/editWeeks.module.css';
+import EditDay from './EditDay';
 
-export default function DinnersControl() {
+export default function EditWeeks() {
   const [currentWeeksDates, setCurrentWeeksDates] = useState([]);
-  const [currentWeeksDinners, setCurrentWeeksDinners] = useState([]);
+  const [weeksData, setWeeksData] = useState({});
   const [userData, setUserData] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -114,17 +114,75 @@ export default function DinnersControl() {
     }
   }
 
-  function getWeeksDinners() {
-    let weeksData =
+  function getWeeksData() {
+    let weeksDataTemp =
       userData?.weeks[currentWeeksDates[0]?.toISOString().split('T')[0]];
-    if (weeksData?.length > 0) {
-      let weeksDinners = weeksData.map((day) =>
-        userData.dinners[day.dinner] ? userData.dinners[day.dinner].name : '---'
-      );
-      setCurrentWeeksDinners([...weeksDinners]);
+    if (weeksDataTemp?.length > 0) {
+      setWeeksData([...weeksDataTemp]);
     } else {
-      setCurrentWeeksDinners(['---', '---', '---', '---', '---', '---', '---']);
+      setWeeksData([
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+        { dinner: '---', notes: '' },
+      ]);
     }
+  }
+
+  function updateDayDinner(day, dinner) {
+    let weeksDataTemp = [...weeksData];
+    weeksDataTemp[day].dinner = dinner;
+    setWeeksData([...weeksDataTemp]);
+  }
+
+  function updateDayNotes(day, notes) {
+    let weeksDataTemp = [...weeksData];
+    Object.assign(weeksDataTemp[day], { notes: notes });
+    setWeeksData(weeksDataTemp);
+  }
+
+  function createEditWeek() {
+    let editWeek = [];
+
+    for (let step = 0; step < 7; step++) {
+      editWeek.push(
+        <EditDay
+          key={step}
+          date={currentWeeksDates[step]}
+          dinners={userData.dinners}
+          scheduledData={weeksData[step]}
+          updateDayDinner={updateDayDinner}
+          updateDayNotes={updateDayNotes}
+        />
+      );
+    }
+    return editWeek;
+  }
+
+  function handleSave() {
+    let userId = firebase.auth().currentUser.uid;
+    for (let i = 0; i < weeksData.length; i++) {
+      firebase
+        .database()
+        .ref(
+          'users/' +
+            userId +
+            '/weeks/' +
+            JSON.stringify(currentWeeksDates[0]).substring(1, 11) +
+            '/' +
+            i +
+            '/'
+        )
+        .update({
+          dinner: weeksData[i].dinner,
+          notes: weeksData[i].notes ? weeksData[i].notes : '',
+        });
+    }
+
+    window.alert('Week Saved!');
   }
 
   // update local state at initial startup
@@ -139,7 +197,7 @@ export default function DinnersControl() {
 
   useEffect(() => {
     if (isLoaded) {
-      getWeeksDinners();
+      getWeeksData();
     }
   }, [userData, isLoaded]);
 
@@ -147,7 +205,7 @@ export default function DinnersControl() {
     <>
       <Menu />
       <div className={styles.wrapper}>
-        <h2>DINNER SCHEDULE</h2>
+        <h2>WEEKLY SCHEDULE</h2>
         {weekTitle()}
         <div className={styles.weekNavWrapper}>
           <button type="button" onClick={handlePrevWeek}>
@@ -157,11 +215,12 @@ export default function DinnersControl() {
             Next Week
           </button>
         </div>
-        <DinnerForm
-          dinners={userData.dinners}
-          weekDates={currentWeeksDates}
-          selectedDinners={currentWeeksDinners}
-        />
+        <div className={styles.editWeek}>
+          {createEditWeek()}
+          <button type="button" onClick={handleSave}>
+            Save
+          </button>
+        </div>
       </div>
     </>
   );

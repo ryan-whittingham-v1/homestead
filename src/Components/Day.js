@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import styles from '../Styles/day.module.css';
 
 function Day(props) {
   function getDayName(dayNum) {
@@ -24,28 +24,30 @@ function Day(props) {
   }
   if (props.day) {
     return (
-      <>
-        <h1>{getDayName(props.day.date.getDay())}</h1>
-        <Header as="h1">
-          {props.day.date?.getMonth() + 1} / {props.day.date?.getDate()} /
-          {props.day.date?.getFullYear()}
-        </Header>
-        <h1>Tonight's Dinner</h1>
-        <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
-        <ul>
-          {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
-          ))}
-        </ul>
-        <p>{props?.day?.dinner?.notes}</p>
-        {props?.day?.messages && <h3>Today's Notes</h3> && (
+      <div className={styles.wrapper}>
+        <div className={styles.heading}>
+          <h1>{getDayName(props.day.date.getDay())}</h1>
+          <h2>
+            {props.day.date?.getMonth() + 1} / {props.day.date?.getDate()} /
+            {props.day.date?.getFullYear()}
+          </h2>
+        </div>
+        <div className={styles.notes}>
+          <h1>Today's Notes</h1>
+
+          {props?.day?.notes}
+        </div>
+        <div className={styles.dinner}>
+          <h1>Tonight's Dinner</h1>
+          <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
           <ul>
-            {props?.day?.messages?.map((message, index) => (
-              <li key={index}>{message}</li>
+            {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
             ))}
           </ul>
-        )}
-      </>
+          <p>{props?.day?.dinner?.notes}</p>
+        </div>
+      </div>
     );
   } else {
     return <p>loading day</p>;

@@ -63,7 +63,7 @@ const Home = () => {
     setToday((prevState) => ({
       ...prevState,
       dinner: dinner ? userData.dinners[dinner] : 'No Dinner Scheduled',
-      messages: todayTemp?.messages ? todayTemp?.messages : '',
+      notes: todayTemp?.notes ? todayTemp?.notes : '',
     }));
   }
 
