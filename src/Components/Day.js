@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import styles from '../Styles/day.module.css';
 
 function Day(props) {
+  const [dinnerDetailsVisible, setDinnerDetailsVisible] = useState(false);
+
   function getDayName(dayNum) {
     switch (dayNum) {
       case 0:
@@ -22,6 +25,11 @@ function Day(props) {
         return 'loading';
     }
   }
+
+  function showDinnerDetails() {
+    setDinnerDetailsVisible(!dinnerDetailsVisible);
+  }
+
   if (props.day) {
     return (
       <div className={styles.wrapper}>
@@ -33,19 +41,29 @@ function Day(props) {
           </h2>
         </div>
         <div className={styles.notes}>
-          <h1>Today's Notes</h1>
-
-          {props?.day?.notes}
+          <h1>Messages</h1>
+          <p>{props?.day?.notes}</p>
         </div>
         <div className={styles.dinner}>
-          <h1>Tonight's Dinner</h1>
-          <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
-          <ul>
-            {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
-          <p>{props?.day?.dinner?.notes}</p>
+          <h1>Dinner</h1>
+          <div className={styles.dinnerName}>
+            <h2>{props?.day.dinner?.name?.toUpperCase()}</h2>
+            <button type="button" onClick={showDinnerDetails}>
+              {dinnerDetailsVisible ? '▲' : '▼'}
+            </button>
+          </div>
+          {dinnerDetailsVisible && (
+            <>
+              <h2>Ingredients:</h2>
+              <ul>
+                {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
+                  <li key={index}>{ingredient}</li>
+                ))}
+              </ul>
+              <h2>Instructions</h2>
+              <p>{props?.day?.dinner?.notes}</p>
+            </>
+          )}
         </div>
       </div>
     );
