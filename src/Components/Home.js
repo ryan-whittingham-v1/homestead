@@ -54,17 +54,25 @@ const Home = () => {
   }
 
   function getTodaysData() {
-    let todayTemp =
-      userData.weeks[currentWeeksDates[0].toISOString().split('T')[0]][
-        today.date.getDay()
-      ];
-    let dinner = todayTemp.dinner;
+    if (userData.weeks[currentWeeksDates[0].toISOString().split('T')[0]]) {
+      let todayTemp =
+        userData.weeks[currentWeeksDates[0].toISOString().split('T')[0]][
+          today.date.getDay()
+        ];
+      let dinner = todayTemp.dinner;
 
-    setToday((prevState) => ({
-      ...prevState,
-      dinner: dinner ? userData.dinners[dinner] : 'No Dinner Scheduled',
-      notes: todayTemp?.notes ? todayTemp?.notes : '',
-    }));
+      setToday((prevState) => ({
+        ...prevState,
+        dinner: userData.dinners[dinner],
+        notes: todayTemp?.notes,
+      }));
+    } else {
+      setToday((prevState) => ({
+        ...prevState,
+        dinner: '',
+        notes: '',
+      }));
+    }
   }
 
   // update local state at initial startup

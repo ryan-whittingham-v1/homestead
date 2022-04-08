@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from '../Styles/day.module.css';
 
 function Day(props) {
   const [dinnerDetailsVisible, setDinnerDetailsVisible] = useState(false);
+  const [dinnerScheduled, setDinnerScheduled] = useState(false);
 
   function getDayName(dayNum) {
     switch (dayNum) {
@@ -30,6 +31,12 @@ function Day(props) {
     setDinnerDetailsVisible(!dinnerDetailsVisible);
   }
 
+  useEffect(() => {
+    if (props?.day?.dinner?.name) {
+      setDinnerScheduled(true);
+    }
+  }, [props.day]);
+
   if (props.day) {
     return (
       <div className={styles.wrapper}>
@@ -46,12 +53,19 @@ function Day(props) {
         </div>
         <div className={styles.dinner}>
           <h1>Dinner</h1>
-          <div className={styles.dinnerName}>
-            <h2>{props?.day.dinner?.name?.toUpperCase()}</h2>
-            <button type="button" onClick={showDinnerDetails}>
-              {dinnerDetailsVisible ? '▲' : '▼'}
-            </button>
-          </div>
+          {dinnerScheduled ? (
+            <>
+              <div className={styles.dinnerName}>
+                <h2>{props?.day.dinner?.name?.toUpperCase()}</h2>
+                <button type="button" onClick={showDinnerDetails}>
+                  {dinnerDetailsVisible ? '▲' : '▼'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <h2>Nothing Scheduled</h2>
+          )}
+
           {dinnerDetailsVisible && (
             <>
               <h2>Ingredients:</h2>
