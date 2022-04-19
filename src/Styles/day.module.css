@@ -1,29 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
+
 .wrapper {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+  color: white;
+  padding-top: 70px;
+}
+
+.wrapper h1 {
+  font-size: 6rem;
+  padding: 0px;
+  font-family: 'Just Another Hand', cursive;
+  color: lightskyblue;
+
+}
+.wrapper h2 {
+  font-family: 'Amatic SC', cursive;
+  font-size: 3rem;
+  margin: 0px;
+  padding: 0px;
 }
 
 .heading {
   flex: 1 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-flow: row wrap;
+  margin-bottom: 25px;
 }
 
-.heading > * {
-  margin: 0px;
-  padding: 0px;
-  font-size: 3rem;
+.headingMain {
+  flex: 1 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.headingSub {
+  flex: 1 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Shadows Into Light', cursive;
+}
+
+.heading h2 {
+  color: lightyellow;
+}
+
+
+.notes {
+  flex: 1 100%;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.notes h2 {
+  color: lightcoral;
+}
+
+.notes p {
+  font-size: 1.5rem;
 }
 
 .dinner {
-  flex: 1 40%;
-  margin: 20px;
+  flex: 1 100%;
+  display: flex;
+  flex-flow: row wrap;
 }
 
-.dinner h1 {
-  font-size: 2.5rem;
+.dinner h2 {
+  color: lightcoral;
 }
 
 .dinner p {
@@ -34,25 +84,83 @@
   font-size: 1.5rem;
 }
 
-.notes {
-  flex: 1 40%;
-  margin: 20px;
-}
-
-.notes h1 {
-  font-size: 2.5rem;
-  margin: 0px;
-  padding: 0px;
-}
-
-.notes p {
-  font-size: 1.5rem;
+.dinnerHead {
+  flex: 1 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .dinnerName {
+  flex: 1 100%;
   display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
-.dinnerName > * {
-  margin: 0px 10px;
+.dinnerName h3 {
+  font-family: 'Shadows Into Light', cursive;
+  font-size: 1.75rem;
+  padding: 0px;
 }
+
+.dinnerName button {
+  background: none;
+	color: white;
+	border: none;
+	padding: 0;
+  margin-left: 10px;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  font-size: 1.5rem;
+  height: 30px;
+}
+
+.dinnerDetails {
+  flex: 1 100%;
+  padding: 0px 50px;
+  font-family: 'Amatic SC', cursive;
+}
+
+.dinnerDetails h4 {
+  font-family: 'Amatic SC', cursive;
+
+  font-size: 2rem;
+  padding: 0px;
+}
+
+.dinnerDetails li {
+  font-size: 2rem;
+  line-height: 25px;
+}
+
+.dinnerDetails p {
+  font-size: 2rem;
+  line-height: 30px;
+}
+
+@media all and (orientation: landscape) {
+  .wrapper {
+    padding: 10px;
+  }
+  .headingMain {
+    flex: 1 50%;
+    justify-content: right;
+    padding-right: 10px;
+  }
+  .headingSub {
+    flex: 1 50%;
+    justify-content: left;
+    padding-left: 10px;
+    
+  }
+  .notes {
+    flex: 1 50%;
+  }
+  .dinner {
+    flex: 1 50%;
+    border-left: solid white 4px;
+  }
+
+}
+

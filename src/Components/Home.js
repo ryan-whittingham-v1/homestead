@@ -88,12 +88,13 @@ const Home = () => {
   }, [userData]);
 
   return (
-    <>
-      <Menu />
-      <div className={styles.wrapper}>
-        {userData ? <Day day={today} /> : <Loader active inline="centered" />}
+    <div className={styles.wrapper}>
+      <div className={styles.menu}>
+        <Menu />
       </div>
-    </>
+
+      {userData ? <Day day={today} /> : <Loader active inline="centered" />}
+    </div>
   );
 };
 

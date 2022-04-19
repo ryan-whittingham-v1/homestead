@@ -9,21 +9,21 @@ function Day(props) {
   function getDayName(dayNum) {
     switch (dayNum) {
       case 0:
-        return 'Sunday';
+        return 'SUNDAY';
       case 1:
-        return 'Monday';
+        return 'MONDAY';
       case 2:
-        return 'Tuesday';
+        return 'TUESDAY';
       case 3:
-        return 'Wednesday';
+        return 'WEDNESDAY';
       case 4:
-        return 'Thursday';
+        return 'THURSDAY';
       case 5:
-        return 'Friday';
+        return 'FRIDAY';
       case 6:
-        return 'Saturday';
+        return 'SATURDAY';
       default:
-        return 'loading';
+        return 'LOADING';
     }
   }
 
@@ -41,42 +41,47 @@ function Day(props) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.heading}>
-          <h1>{getDayName(props.day.date.getDay())}</h1>
-          <h2>
-            {props.day.date?.getMonth() + 1} / {props.day.date?.getDate()} /
-            {props.day.date?.getFullYear()}
-          </h2>
+          <div className={styles.headingMain}>
+            <h1>{getDayName(props.day.date.getDay())}</h1>
+          </div>
+          <div className={styles.headingSub}>
+            <h2>
+              {props.day.date?.getMonth() + 1} / {props.day.date?.getDate()} /
+              {props.day.date?.getFullYear()}
+            </h2>
+          </div>
         </div>
         <div className={styles.notes}>
-          <h1>Messages</h1>
+          <h2>TODAY'S NOTES</h2>
           <p>{props?.day?.notes}</p>
         </div>
         <div className={styles.dinner}>
-          <h1>Dinner</h1>
+          <div className={styles.dinnerHead}>
+            <h2>TONIGHT'S MENU</h2>
+          </div>
           {dinnerScheduled ? (
             <>
               <div className={styles.dinnerName}>
-                <h2>{props?.day.dinner?.name?.toUpperCase()}</h2>
+                <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
                 <button type="button" onClick={showDinnerDetails}>
                   {dinnerDetailsVisible ? '▲' : '▼'}
                 </button>
               </div>
             </>
           ) : (
-            <h2>Nothing Scheduled</h2>
+            <h3>Nothing Scheduled</h3>
           )}
 
           {dinnerDetailsVisible && (
-            <>
-              <h2>Ingredients:</h2>
+            <div className={styles.dinnerDetails}>
+              <h4>RECIPE</h4>
               <ul>
                 {props?.day?.dinner?.ingredients?.map((ingredient, index) => (
                   <li key={index}>{ingredient}</li>
                 ))}
               </ul>
-              <h2>Instructions</h2>
               <p>{props?.day?.dinner?.notes}</p>
-            </>
+            </div>
           )}
         </div>
       </div>

@@ -1,5 +1,11 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: black;
+  min-height: 100vh;
 }
+
+.menu {
+  position: fixed;
+  margin: 10px;
+}
+
+
