@@ -1,17 +1,86 @@
+.background {
+  background: black;
+  min-height: 100vh;
+}
+
 .wrapper {
   display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  color: white;
 }
 
-.left {
-  flex: 1 30%;
+.menu {
+  margin: 10px;
+  flex: 1 100%;
 }
 
-.right {
-  flex: 1 70%;
+.select {
+  flex: 1 100%;
   display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .form {
-  margin-top: 50px;
-  margin-right: 20px;
+  margin-top: 20px;
+  width: 75vw;
 }
+
+fieldset {
+  border: none;
+}
+
+.form input {
+}
+
+.name {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+.name > * {
+  flex: 1 100%;
+  text-align: center;
+}
+
+.ingredients {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+.ingredients > * {
+  flex: 1 100%;
+  text-align: center;
+}
+
+
+
+.ingredients button {
+  margin-top: 10px;
+}
+
+.notes {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+.notes > * {
+  flex: 1 100%;
+  text-align: center;
+}
+
+.save {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+

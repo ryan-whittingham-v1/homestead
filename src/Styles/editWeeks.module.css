@@ -1,17 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
+
 .wrapper {
+  background: black;
+  color: white;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-flow: row wrap;
+}
+
+.menu {
+  margin: 10px;
+  flex: 1 100%;
+}
+
+.title {
+  flex: 1 100%;
+  display: flex;
   justify-content: center;
+  margin-bottom: 10px;
+}
+
+.title h3 {
+  font-size: 2rem;
+  color: lightcoral;
+  font-family: 'Shadows Into Light', cursive;
+
 }
 
 .weekNavWrapper {
   display: flex;
   flex-flow: row wrap;
+  flex: 1 100%;
+  justify-content: center;
 }
 
 .weekNavWrapper button {
   width: 150px;
+  background: white;
+	padding: 0;
+  margin-left: 10px;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  height: 30px;
+  border-radius: 10px;
 }
 
 .editWeek {
@@ -25,3 +59,4 @@
   margin-bottom: 20px;
   font-size: 2rem;
 }
+

@@ -22,17 +22,26 @@ export default function DinnerList(props) {
     props.addDinner();
   }
 
-  function createButtons() {
+  function getDinnerID(dinner) {
+    for (const [key, value] of Object.entries(props.dinners)) {
+      if (dinner === value.name) {
+        return key;
+      }
+    }
+    return '--';
+  }
+
+  function createOptions() {
     let dinners = [];
     for (const [key, value] of Object.entries(props?.dinners)) {
       dinners.push(
-        <button
+        <option
           key={value.name}
           type="button"
           onClick={() => props.callback(key)}
         >
           {value.name.toUpperCase()}
-        </button>
+        </option>
       );
     }
 
@@ -42,12 +51,12 @@ export default function DinnerList(props) {
 
   return (
     <div className={styles.wrapper}>
-      <h2>DINNERS</h2>
-      <button type="button" onClick={addDinner}>
-        Add Dinner
-      </button>
-      <br />
-      <div className={styles.list}>{createButtons()}</div>
+      <div className={styles.list}>
+        <select value={props.selectedDinner.name} onChange={handleDinnerChange}>
+          {createOptions()}
+        </select>
+      </div>
     </div>
   );
 }
+dfs;

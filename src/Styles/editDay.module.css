@@ -1,8 +1,22 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
+
 .wrapper {
   display: flex;
   flex-direction: column;
-  background: rgb(226, 226, 226);
+  background: none;
   margin: 20px;
   padding: 20px;
   border-radius: 10px;
+  border: solid white 2px;
+}
+
+.wrapper h1 {
+  font-family: 'Just Another Hand', cursive;
+  font-size: 4rem;
+  color: lightskyblue;
+}
+
+.wrapper select {
+  height: 40px;
 }

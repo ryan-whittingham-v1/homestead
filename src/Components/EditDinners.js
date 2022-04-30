@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '../firebase.js';
 import { v4 as uuidv4 } from 'uuid';
-
 import Menu from './Menu';
-import DinnerList from './DinnerList';
-
 import styles from '../Styles/editDinners.module.css';
 
 export default function EditDinners() {
+  //Selected Dinner Object
   const [selectedDinner, setSelectedDinner] = useState();
-  const [userDinners, setUserDinners] = useState({});
-  const [selectedDinnerID, setSelectedDinnerID] = useState('');
+  //List of User Dinners
+  const [userDinners, setUserDinners] = useState();
+  //ID of Selected Dinner
+  const [selectedDinnerID, setSelectedDinnerID] = useState();
 
   function getUserDinners() {
     let userId = firebase.auth().currentUser.uid;
@@ -18,26 +18,17 @@ export default function EditDinners() {
       .database()
       .ref('users/' + userId + '/dinners')
       .once('value', (snapshot) => {
-        const firebaseData = snapshot.val();
-        setUserDinners(firebaseData);
+        setUserDinners(snapshot.val());
       });
-  }
-
-  function listCallback(dinner) {
-    setSelectedDinnerID(dinner);
   }
 
   function addDinner() {
     let id = uuidv4();
-    setUserDinners({
-      ...userDinners,
-      [id]: { name: 'new dinner', ingredients: [], notes: '' },
-    });
     setSelectedDinnerID(id);
   }
 
   function addIngredient() {
-    if (selectedDinner.ingredients) {
+    if (selectedDinner?.ingredients) {
       setSelectedDinner({
         ...selectedDinner,
         ingredients: [...selectedDinner?.ingredients, ''],
@@ -81,104 +72,178 @@ export default function EditDinners() {
         .remove();
 
       getUserDinners();
-      setSelectedDinner({ name: '', ingredients: [], notes: '' });
-      setSelectedDinnerID('');
     }
   }
 
+  function compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.props.value.toUpperCase();
+    const nameB = b.props.value.toUpperCase();
+
+    let comparison = 0;
+    if (nameA > nameB) {
+      comparison = 1;
+    } else if (nameA < nameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  function getOptions() {
+    if (userDinners !== undefined) {
+      let options = [];
+      for (const [key, value] of Object.entries(userDinners)) {
+        options.push(
+          <option key={key} value={value?.name}>
+            {value?.name.toUpperCase()}
+          </option>
+        );
+      }
+      options.sort(compare);
+      return options;
+    }
+  }
+
+  function getDinnerID(dinner) {
+    for (const [key, value] of Object.entries(userDinners)) {
+      if (dinner === value.name) {
+        return key;
+      }
+    }
+  }
+
+  function handleDinnerChange(event) {
+    setSelectedDinnerID(getDinnerID(event.target.value));
+  }
+
+  function updateSelectedDinner() {
+    if (userDinners) {
+      if (userDinners[selectedDinnerID]) {
+        setSelectedDinner(userDinners[selectedDinnerID]);
+      } else {
+        setSelectedDinner({ name: '', ingredients: [], notes: '' });
+      }
+    }
+  }
+
+  let select = (
+    <select value={selectedDinner?.name} onChange={handleDinnerChange}>
+      {getOptions()}
+    </select>
+  );
+
+  // get user dinnners on mount
   useEffect(() => {
     getUserDinners();
   }, []);
 
+  // set initial selected dinner ID to first in dinner lists
   useEffect(() => {
-    if (selectedDinnerID) {
-      setSelectedDinner(userDinners[selectedDinnerID]);
+    if (userDinners && selectedDinnerID === undefined) {
+      let dinners = getOptions();
+      setSelectedDinnerID(dinners[0].key);
     }
+  }, [userDinners]);
+
+  // update selected dinner when selected dinner ID changes
+  useEffect(() => {
+    updateSelectedDinner();
   }, [selectedDinnerID]);
 
   return (
-    <>
-      <Menu />
+    <div className={styles.background}>
       <div className={styles.wrapper}>
-        <div className={styles.left}>
-          <DinnerList
-            dinners={userDinners}
-            callback={listCallback}
-            addDinner={addDinner}
-          />
+        <div className={styles.menu}>
+          <Menu />
         </div>
-        <div className={styles.right}>
+        <div className={styles.select}>
+          <label>{select}</label>
+          <button type="button" onClick={() => addDinner()}>
+            +
+          </button>
+        </div>
+        <div className={styles.formContainer}>
           <form
             className={styles.form}
             onSubmit={(e) => {
               handleSubmit(e);
             }}
           >
-            <fieldset disabled={selectedDinnerID === ''}>
-              <label>Name: </label>
-              <br />
-              <input
-                name="name"
-                type="text"
-                value={selectedDinner?.name}
-                onChange={(e) =>
-                  setSelectedDinner({ ...selectedDinner, name: e.target.value })
-                }
-              />
-              <br />
-              <label>Ingredients: </label>
-              <br />
-              {selectedDinner?.ingredients?.map((ingredient, index) => (
-                <>
-                  <input
-                    name={`ingredient${index}`}
-                    type="text"
-                    value={selectedDinner.ingredients[index]}
-                    key={index}
-                    onChange={(e) =>
-                      setSelectedDinner({
-                        ...selectedDinner,
-                        ingredients: [
-                          ...selectedDinner.ingredients.slice(0, index),
-                          e.target.value,
-                          ...selectedDinner.ingredients.slice(index + 1),
-                        ],
-                      })
-                    }
-                  />
-                  <button type="button" onClick={() => removeIngredient(index)}>
-                    -
-                  </button>
-                  <br />
-                </>
-              ))}
-              <button type="button" onClick={addIngredient}>
-                +
-              </button>
-              <br />
-              <label>Notes: </label>
-              <br />
-              <textarea
-                id="notes"
-                value={selectedDinner?.notes}
-                onChange={(e) =>
-                  setSelectedDinner({
-                    ...selectedDinner,
-                    notes: e.target.value,
-                  })
-                }
-                rows="5"
-                cols="33"
-              />
-              <br />
-              <input type="submit" value="Save" />
-              <button type="button" onClick={deleteDinner}>
-                Delete
-              </button>
+            <fieldset>
+              <div className={styles.name}>
+                <label>Name: </label>
+
+                <input
+                  name="name"
+                  type="text"
+                  value={selectedDinner?.name}
+                  onChange={(e) =>
+                    setSelectedDinner({
+                      ...selectedDinner,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className={styles.ingredients}>
+                <label>Ingredients: </label>
+
+                {selectedDinner?.ingredients?.map((ingredient, index) => (
+                  <div className={styles.ingredient}>
+                    <input
+                      name={`ingredient${index}`}
+                      type="text"
+                      value={selectedDinner.ingredients[index]}
+                      key={index}
+                      onChange={(e) =>
+                        setSelectedDinner({
+                          ...selectedDinner,
+                          ingredients: [
+                            ...selectedDinner.ingredients.slice(0, index),
+                            e.target.value,
+                            ...selectedDinner.ingredients.slice(index + 1),
+                          ],
+                        })
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeIngredient(index)}
+                    >
+                      -
+                    </button>
+                  </div>
+                ))}
+                <button type="button" onClick={addIngredient}>
+                  ADD INGREDIENT
+                </button>
+              </div>
+              <div className={styles.notes}>
+                <label>Notes: </label>
+
+                <textarea
+                  id="notes"
+                  value={selectedDinner?.notes}
+                  onChange={(e) =>
+                    setSelectedDinner({
+                      ...selectedDinner,
+                      notes: e.target.value,
+                    })
+                  }
+                  rows="5"
+                  cols="33"
+                />
+              </div>
+              <div className={styles.save}>
+                <input type="submit" value="Save" />
+                <button type="button" onClick={deleteDinner}>
+                  Delete
+                </button>
+              </div>
             </fieldset>
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }

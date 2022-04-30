@@ -202,26 +202,28 @@ export default function EditWeeks() {
   }, [userData, isLoaded]);
 
   return (
-    <>
-      <Menu />
-      <div className={styles.wrapper}>
-        <h2>WEEKLY SCHEDULE</h2>
-        {weekTitle()}
-        <div className={styles.weekNavWrapper}>
-          <button type="button" onClick={handlePrevWeek}>
-            Previous Week
-          </button>
-          <button type="button" onClick={handleNextWeek}>
-            Next Week
-          </button>
-        </div>
-        <div className={styles.editWeek}>
-          {createEditWeek()}
-          <button type="button" onClick={handleSave}>
-            Save
-          </button>
-        </div>
+    <div className={styles.wrapper}>
+      <div className={styles.menu}>
+        <Menu />
       </div>
-    </>
+      <div className={styles.title}>
+        <h1>{weekTitle()}</h1>
+      </div>
+
+      <div className={styles.weekNavWrapper}>
+        <button type="button" onClick={handlePrevWeek}>
+          ᐊ Previous Week
+        </button>
+        <button type="button" onClick={handleNextWeek}>
+          Next Week ᐅ
+        </button>
+      </div>
+      <div className={styles.editWeek}>
+        {createEditWeek()}
+        <button type="button" onClick={handleSave}>
+          Save
+        </button>
+      </div>
+    </div>
   );
 }

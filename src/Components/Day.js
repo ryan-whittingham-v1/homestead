@@ -51,27 +51,22 @@ function Day(props) {
             </h2>
           </div>
         </div>
-        <div className={styles.notes}>
-          <h2>TODAY'S NOTES</h2>
-          <p>{props?.day?.notes}</p>
-        </div>
         <div className={styles.dinner}>
           <div className={styles.dinnerHead}>
             <h2>TONIGHT'S MENU</h2>
           </div>
-          {dinnerScheduled ? (
-            <>
-              <div className={styles.dinnerName}>
+          <div className={styles.dinnerName}>
+            {dinnerScheduled ? (
+              <>
                 <h3>{props?.day.dinner?.name?.toUpperCase()}</h3>
                 <button type="button" onClick={showDinnerDetails}>
                   {dinnerDetailsVisible ? '▲' : '▼'}
                 </button>
-              </div>
-            </>
-          ) : (
-            <h3>Nothing Scheduled</h3>
-          )}
-
+              </>
+            ) : (
+              <h3>Nothing Scheduled</h3>
+            )}
+          </div>
           {dinnerDetailsVisible && (
             <div className={styles.dinnerDetails}>
               <h4>RECIPE</h4>
